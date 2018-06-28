@@ -151,7 +151,7 @@
 
 /* Begin PBXFileReference section */
 		014CC71E572C5CC14ADFA82A8B7B97DC /* Expression.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = Expression.swift; path = Sources/Nimble/Expression.swift; sourceTree = "<group>"; };
-		01E0A0A620E45A2E00ABDDB2 /* BBTimer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BBTimer.swift; sourceTree = "<group>"; };
+		01E0A0A620E45A2E00ABDDB2 /* BBTimer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = BBTimer.swift; path = ../../BittyBird/Classes/BBTimer.swift; sourceTree = "<group>"; };
 		03B58F5E31957B256FBB783250D6AEA6 /* LICENSE */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; path = LICENSE; sourceTree = "<group>"; };
 		057B1682EF92E71137867F0C259AF2CC /* NSString+C99ExtendedIdentifier.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = "NSString+C99ExtendedIdentifier.swift"; path = "Sources/Quick/NSString+C99ExtendedIdentifier.swift"; sourceTree = "<group>"; };
 		0761E3019D28A7D2D1452F7C613C5AF2 /* BittyBird.podspec */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; includeInIndex = 1; path = BittyBird.podspec; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
@@ -333,6 +333,7 @@
 			isa = PBXGroup;
 			children = (
 				1DF2A772141AE4A33217BE39E96E44B2 /* BittyBird */,
+				01E0A0A620E45A2E00ABDDB2 /* BBTimer.swift */,
 			);
 			name = "Development Pods";
 			sourceTree = "<group>";
@@ -360,7 +361,6 @@
 			children = (
 				F2810E0CF16EED4E8D366B7CB95BE8A1 /* Pod */,
 				D34C2057F787EBF79E24FEAED0774BBA /* Support Files */,
-				01E0A0A620E45A2E00ABDDB2 /* BBTimer.swift */,
 			);
 			name = BittyBird;
 			path = ../..;
