@@ -31,7 +31,6 @@
 		2C564940FD95A37E3091C9B0337524E7 /* ExampleMetadata.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8452C5F4B63A4A0178E56CDC9E95DFE8 /* ExampleMetadata.swift */; };
 		2EDA4B02A4A76DA8094400B65EE7454E /* URL+FileName.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6D48A33A49B17952C7ABB6214240CB9 /* URL+FileName.swift */; };
 		31C39ED8CB1C9317F1F2840FC919662D /* PostNotification.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E0D34DBF4CE55E4FF1BADBA826F9389 /* PostNotification.swift */; settings = {COMPILER_FLAGS = "-DPRODUCT_NAME=Nimble/Nimble"; }; };
-		31F3BAFC8C0C2F4B560FB568D5AE7C4B /* ReplaceMe.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8B0A7DE8E1ED3A22499089B48778C6D /* ReplaceMe.swift */; };
 		32B38992751B96F21324BFC9923BFCBD /* AssertionDispatcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 495BFC3F9A44D525D4BFC5B10557E6C3 /* AssertionDispatcher.swift */; settings = {COMPILER_FLAGS = "-DPRODUCT_NAME=Nimble/Nimble"; }; };
 		35CADB1AD8E063A35DF68147F3183206 /* CwlMachBadInstructionHandler.h in Headers */ = {isa = PBXBuildFile; fileRef = EF959663D47B18687B5785D72D856CB6 /* CwlMachBadInstructionHandler.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		3B3A88E074630B1EBC2139F4F70F0443 /* ThrowAssertion.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AB0094EAAC3C18B000459B228F01637 /* ThrowAssertion.swift */; settings = {COMPILER_FLAGS = "-DPRODUCT_NAME=Nimble/Nimble"; }; };
@@ -272,7 +271,6 @@
 		D57BA172F41031FEBFE45E9AE79DFF3D /* Pods-BittyBird_Tests-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "Pods-BittyBird_Tests-dummy.m"; sourceTree = "<group>"; };
 		D685C0D509328CD8778F99DD53A49A48 /* Closures.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = Closures.swift; path = Sources/Quick/Hooks/Closures.swift; sourceTree = "<group>"; };
 		D6ACF56A3280DBAABFB47A125BE3EFC6 /* Quick.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.module; path = Quick.modulemap; sourceTree = "<group>"; };
-		D8B0A7DE8E1ED3A22499089B48778C6D /* ReplaceMe.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ReplaceMe.swift; path = BittyBird/Classes/ReplaceMe.swift; sourceTree = "<group>"; };
 		D954E7E4D336837086313DAE758F7F32 /* Functional.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = Functional.swift; path = Sources/Nimble/Utils/Functional.swift; sourceTree = "<group>"; };
 		DBEE4D473415B347A54A2E432EE8EEF7 /* Quick-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "Quick-umbrella.h"; sourceTree = "<group>"; };
 		DDD0F5DAA0AC84C5E3ADE087C20B50BA /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS11.3.sdk/System/Library/Frameworks/Foundation.framework; sourceTree = DEVELOPER_DIR; };
@@ -360,7 +358,6 @@
 		1DF2A772141AE4A33217BE39E96E44B2 /* BittyBird */ = {
 			isa = PBXGroup;
 			children = (
-				D8B0A7DE8E1ED3A22499089B48778C6D /* ReplaceMe.swift */,
 				F2810E0CF16EED4E8D366B7CB95BE8A1 /* Pod */,
 				D34C2057F787EBF79E24FEAED0774BBA /* Support Files */,
 				01E0A0A620E45A2E00ABDDB2 /* BBTimer.swift */,
@@ -760,7 +757,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				ED6F59DFA9ED8FC05B967FF7C745286A /* BittyBird-dummy.m in Sources */,
-				31F3BAFC8C0C2F4B560FB568D5AE7C4B /* ReplaceMe.swift in Sources */,
 				01E0A0A720E45A2E00ABDDB2 /* BBTimer.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

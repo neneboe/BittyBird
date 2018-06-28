@@ -1,18 +1,17 @@
 # BittyBird
 
-[![CI Status](https://img.shields.io/travis/Nick Eneboe/BittyBird.svg?style=flat)](https://travis-ci.org/Nick Eneboe/BittyBird)
+[![CI Status](https://img.shields.io/travis/neneboe/BittyBird.svg?style=flat)](https://travis-ci.org/neneboe/BittyBird)
 [![Version](https://img.shields.io/cocoapods/v/BittyBird.svg?style=flat)](https://cocoapods.org/pods/BittyBird)
 [![License](https://img.shields.io/cocoapods/l/BittyBird.svg?style=flat)](https://cocoapods.org/pods/BittyBird)
 [![Platform](https://img.shields.io/cocoapods/p/BittyBird.svg?style=flat)](https://cocoapods.org/pods/BittyBird)
 
-## Example
-
-To run the example project, clone the repo, and run `pod install` from the Example directory first.
+BittyBird is still a work in progress. When done, the final implementation will be as close as possible to the official [Phoenix Channels Javascript client](https://github.com/phoenixframework/phoenix/blob/master/assets/js/phoenix.js). So close in fact that you can basically use their documentation from that client to figure everything out with this one.
 
 ## Requirements
 
-## Installation
+BittyBird was written using Swift 4.1.2 targeted at devices using iOS 8.0 and above. It's only dependency is [SwiftMsgPack](https://github.com/malcommac/SwiftMsgPack), which it uses for its MessagePack implementaion.
 
+## Installation
 BittyBird is available through [CocoaPods](https://cocoapods.org). To install
 it, simply add the following line to your Podfile:
 
@@ -20,10 +19,16 @@ it, simply add the following line to your Podfile:
 pod 'BittyBird'
 ```
 
-## Author
+## Testing
 
-Nick Eneboe, neneboe@gmail.com
+To run the tests, clone the repo, run `pod install` from the Example directory, then tests should pass.
 
-## License
+## About
+
+#### Author
+
+Nick Eneboe - Shout out to SwiftPhoenixClient though. This repo is very nearly a fork of SwiftPhoenixClient, but I wanted to write it from scratch for my own practice.
+
+#### License
 
 BittyBird is available under the MIT license. See the LICENSE file for more info.
