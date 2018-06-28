@@ -1,0 +1,22 @@
+{
+  "name": "BittyBird",
+  "version": "0.1.0",
+  "summary": "A short description of BittyBird.",
+  "description": "TODO: Add long description of the pod here.",
+  "homepage": "https://github.com/Nick Eneboe/BittyBird",
+  "license": {
+    "type": "MIT",
+    "file": "LICENSE"
+  },
+  "authors": {
+    "Nick Eneboe": "neneboe@gmail.com"
+  },
+  "source": {
+    "git": "https://github.com/Nick Eneboe/BittyBird.git",
+    "tag": "0.1.0"
+  },
+  "platforms": {
+    "ios": "8.0"
+  },
+  "source_files": "BittyBird/Classes/**/*"
+}

@@ -7,20 +7,22 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		01E0A0AA20E45A6D00ABDDB2 /* BBTimerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01E0A0A920E45A6D00ABDDB2 /* BBTimerTests.swift */; };
 		607FACEC1AFB9204008FA782 /* Tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 607FACEB1AFB9204008FA782 /* Tests.swift */; };
 		64AAA7EAF7F794B9B7DFC8B3 /* Pods_BittyBird_Tests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 554D107881F2D1976A253706 /* Pods_BittyBird_Tests.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		00C36A64E175848C909FFDF3 /* README.md */ = {isa = PBXFileReference; includeInIndex = 1; name = README.md; path = ../README.md; sourceTree = "<group>"; };
-		0FFFFED52E39AEC83943F9BD /* BittyBird.podspec */ = {isa = PBXFileReference; includeInIndex = 1; name = BittyBird.podspec; path = ../BittyBird.podspec; sourceTree = "<group>"; };
+		00C36A64E175848C909FFDF3 /* README.md */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = net.daringfireball.markdown; name = README.md; path = ../README.md; sourceTree = "<group>"; };
+		01E0A0A920E45A6D00ABDDB2 /* BBTimerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BBTimerTests.swift; sourceTree = "<group>"; };
+		0FFFFED52E39AEC83943F9BD /* BittyBird.podspec */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = BittyBird.podspec; path = ../BittyBird.podspec; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
 		554D107881F2D1976A253706 /* Pods_BittyBird_Tests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_BittyBird_Tests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		607FACE51AFB9204008FA782 /* BittyBird_Tests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = BittyBird_Tests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		607FACEA1AFB9204008FA782 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		607FACEB1AFB9204008FA782 /* Tests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tests.swift; sourceTree = "<group>"; };
 		79535C8B176A85FF8B988090 /* Pods-BittyBird_Tests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-BittyBird_Tests.release.xcconfig"; path = "Pods/Target Support Files/Pods-BittyBird_Tests/Pods-BittyBird_Tests.release.xcconfig"; sourceTree = "<group>"; };
 		84B54DD55A67086171169554 /* Pods-BittyBird_Tests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-BittyBird_Tests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-BittyBird_Tests/Pods-BittyBird_Tests.debug.xcconfig"; sourceTree = "<group>"; };
-		9D510BBBAA9C7E418C37B45F /* LICENSE */ = {isa = PBXFileReference; includeInIndex = 1; name = LICENSE; path = ../LICENSE; sourceTree = "<group>"; };
+		9D510BBBAA9C7E418C37B45F /* LICENSE */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = LICENSE; path = ../LICENSE; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -76,6 +78,7 @@
 			children = (
 				607FACEB1AFB9204008FA782 /* Tests.swift */,
 				607FACE91AFB9204008FA782 /* Supporting Files */,
+				01E0A0A920E45A6D00ABDDB2 /* BBTimerTests.swift */,
 			);
 			path = Tests;
 			sourceTree = "<group>";
@@ -130,10 +133,6 @@
 				LastUpgradeCheck = 0830;
 				ORGANIZATIONNAME = CocoaPods;
 				TargetAttributes = {
-					607FACCF1AFB9204008FA782 = {
-						CreatedOnToolsVersion = 6.3.1;
-						LastSwiftMigration = 0900;
-					};
 					607FACE41AFB9204008FA782 = {
 						CreatedOnToolsVersion = 6.3.1;
 						LastSwiftMigration = 0900;
@@ -218,6 +217,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				607FACEC1AFB9204008FA782 /* Tests.swift in Sources */,
+				01E0A0AA20E45A6D00ABDDB2 /* BBTimerTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

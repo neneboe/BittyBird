@@ -1,0 +1,27 @@
+PODS:
+  - BittyBird (0.1.0)
+  - Nimble (7.0.3)
+  - Quick (1.2.0)
+
+DEPENDENCIES:
+  - BittyBird (from `../`)
+  - Nimble (~> 7.0.2)
+  - Quick (~> 1.2.0)
+
+SPEC REPOS:
+  https://github.com/cocoapods/specs.git:
+    - Nimble
+    - Quick
+
+EXTERNAL SOURCES:
+  BittyBird:
+    :path: "../"
+
+SPEC CHECKSUMS:
+  BittyBird: 39007aa4ea991977223a7149234b6d7f38f7fab7
+  Nimble: 7f5a9c447a33002645a071bddafbfb24ea70e0ac
+  Quick: 58d203b1c5e27fff7229c4c1ae445ad7069a7a08
+
+PODFILE CHECKSUM: 14dc2fb54a106d4857bc0a4a04363672bb4310fb
+
+COCOAPODS: 1.5.3

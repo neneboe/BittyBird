@@ -1,0 +1,6 @@
+framework module BittyBird {
+  umbrella header "BittyBird-umbrella.h"
+
+  export *
+  module * { export * }
+}
