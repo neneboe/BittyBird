@@ -16,7 +16,7 @@ class SocketSpec: QuickSpec {
 //      it("initializes with `timeout` and `reconnectAfterMs` properties") {
 //        let socket = Socket()
 //        expect(socket.timeout).notTo(beNil())
-//        expect(socket.reconnectAfterMs).notTo(beNil())
+//        expect(socket.reconnectAfterSeconds).notTo(beNil())
 //      }
     }
   }

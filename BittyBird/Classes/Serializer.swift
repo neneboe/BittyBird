@@ -9,15 +9,15 @@ import Foundation
 import SwiftMsgPack
 
 /// Encodes and decodes messages using MessagePack
-open class Serializer {
+open class Serializer, CanSerialize {
   /**
    Encodes a Message into MessagePack.Data
 
    - Parameter msg: Message instance to be packed
-   - Parameter callback: Function that accepts and returns MessagePack.Data
-   - Returns: A MessagePack.Data object returned from `callback`
+   - Parameter callback: Function that accepts MessagePack.Data with no return value
+   - Returns: No return value
    */
-  open class func encode(msg: Message, callback: ((Data) -> Data)) -> Data {
+  open class func encode(msg: Message, callback: ((Data) -> Void)) -> Void {
     var encodedMsg = Data()
     do {
       try encodedMsg.pack(
@@ -32,17 +32,18 @@ open class Serializer {
     } catch {
       print("Something went wrong while packing data: \(error)")
     }
-    return callback(encodedMsg)
+
+    callback(encodedMsg)
   }
 
   /**
    Decodes MessagePack.Data into a Message
 
    - Parameter rawPayload: Binary data from server
-   - Parameter callback: Function that accepts and returns a Message
-   - Returns: A Message object returned from `callback`
+   - Parameter callback: Function that accepts a Message with no return value
+   - Returns: No return value
    */
-  open class func decode(rawPayload: Data, callback: ((Message) -> Message)) -> Message {
+  open class func decode(rawPayload: Data, callback: ((Message) -> Void)) -> Void {
     let data: Data = rawPayload
     var decodedMsg: Message?
     var decodedData: Any?
@@ -52,7 +53,8 @@ open class Serializer {
     } catch {
       print("Something went wrong while unpacking data: \(error)")
     }
-    return callback(decodedMsg!)
+
+    callback(decodedMsg!)
   }
 
   /**
