@@ -1,9 +1,9 @@
 {
   "name": "BittyBird",
   "version": "0.1.0",
-  "summary": "A short description of BittyBird.",
-  "description": "TODO: Add long description of the pod here.",
-  "homepage": "https://github.com/Nick Eneboe/BittyBird",
+  "summary": "BittyBird is a Phoenix Channels Swift client that uses MessagePack for serialization instead of JSON.",
+  "description": "BittyBird is a Phoenix Channels Swift client that uses MessagePack for serialization instead of JSON. That way you get that sweet binary goodness. It's also quite open so you can easily extend, inherit from, and override with your own implementations of pushing and receiving messages.",
+  "homepage": "https://github.com/neneboe/BittyBird",
   "license": {
     "type": "MIT",
     "file": "LICENSE"
@@ -12,11 +12,17 @@
     "Nick Eneboe": "neneboe@gmail.com"
   },
   "source": {
-    "git": "https://github.com/Nick Eneboe/BittyBird.git",
+    "git": "https://github.com/neneboe/BittyBird.git",
     "tag": "0.1.0"
   },
   "platforms": {
     "ios": "8.0"
   },
-  "source_files": "BittyBird/Classes/**/*"
+  "swift_version": "4.1",
+  "source_files": "BittyBird/Classes/**/*",
+  "dependencies": {
+    "SwiftMsgPack": [
+      "~> 1.0"
+    ]
+  }
 }

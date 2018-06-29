@@ -25,7 +25,7 @@ class BBTimerSpec: QuickSpec {
         it("sets `tries` back to 0") {
           let bbtimer = BBTimer(callback: callback, timerCalc: timerCalc)
           bbtimer.tries = 1
-          expect(bbtimer.tries) == 1
+          precondition(bbtimer.tries == 1)
           bbtimer.reset()
           expect(bbtimer.tries) == 0
         }
@@ -39,7 +39,7 @@ class BBTimerSpec: QuickSpec {
             userInfo: nil,
             repeats: false
           )
-          expect(bbtimer.timer).notTo(beNil())
+          precondition(bbtimer.timer != nil)
           bbtimer.reset()
           expect(bbtimer.timer).to(beNil())
         }

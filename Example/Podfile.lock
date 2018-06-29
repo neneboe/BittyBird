@@ -1,7 +1,9 @@
 PODS:
-  - BittyBird (0.1.0)
+  - BittyBird (0.1.0):
+    - SwiftMsgPack (~> 1.0)
   - Nimble (7.0.3)
   - Quick (1.2.0)
+  - SwiftMsgPack (1.0.0)
 
 DEPENDENCIES:
   - BittyBird (from `../`)
@@ -12,16 +14,18 @@ SPEC REPOS:
   https://github.com/cocoapods/specs.git:
     - Nimble
     - Quick
+    - SwiftMsgPack
 
 EXTERNAL SOURCES:
   BittyBird:
     :path: "../"
 
 SPEC CHECKSUMS:
-  BittyBird: 39007aa4ea991977223a7149234b6d7f38f7fab7
+  BittyBird: 338f5fe989750f1cde335dda2f3e588ab6fcf8ff
   Nimble: 7f5a9c447a33002645a071bddafbfb24ea70e0ac
   Quick: 58d203b1c5e27fff7229c4c1ae445ad7069a7a08
+  SwiftMsgPack: 2d36d4b1551716b45ed5a7bf8faca3d3e9d4c119
 
-PODFILE CHECKSUM: 14dc2fb54a106d4857bc0a4a04363672bb4310fb
+PODFILE CHECKSUM: 8b83d948659ca0b37b9aad9b68a74989f726c246
 
 COCOAPODS: 1.5.3
