@@ -30,7 +30,7 @@ class SerializerSpec: QuickSpec {
             ]
           )
         } catch {
-          print("couldn't pack data in test")
+          print("Couldn't pack data in test: \(error)")
         }
       }
 
@@ -46,7 +46,11 @@ class SerializerSpec: QuickSpec {
         it("passes decoded `rawPayload` to `callback`") {
           let callback = {(msg: Message) -> Message in return msg}
           let decodedMsg: Message = Serializer.decode(rawPayload: binMsg, callback: callback)
-          expect(decodedMsg.topic).to(equal(testMsg.topic))
+          expect(decodedMsg.topic) == testMsg.topic
+          expect(decodedMsg.event) == testMsg.event
+          expect(decodedMsg.payload) == testMsg.payload
+          expect(decodedMsg.ref) == testMsg.ref
+          expect(decodedMsg.joinRef).to(beNil())
         }
       }
     }

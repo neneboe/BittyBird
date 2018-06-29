@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		013C03CB20E5860B00ED0716 /* SerializerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 013C03CA20E5860B00ED0716 /* SerializerTests.swift */; };
 		013C03D020E5CA4C00ED0716 /* MessageTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 013C03CF20E5CA4C00ED0716 /* MessageTests.swift */; };
+		013C03D220E6982500ED0716 /* SocketTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 013C03D120E6982500ED0716 /* SocketTests.swift */; };
 		01E0A0AA20E45A6D00ABDDB2 /* BBTimerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01E0A0A920E45A6D00ABDDB2 /* BBTimerTests.swift */; };
 		607FACEC1AFB9204008FA782 /* Tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 607FACEB1AFB9204008FA782 /* Tests.swift */; };
 		64AAA7EAF7F794B9B7DFC8B3 /* Pods_BittyBird_Tests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 554D107881F2D1976A253706 /* Pods_BittyBird_Tests.framework */; };
@@ -18,6 +19,7 @@
 		00C36A64E175848C909FFDF3 /* README.md */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = net.daringfireball.markdown; name = README.md; path = ../README.md; sourceTree = "<group>"; };
 		013C03CA20E5860B00ED0716 /* SerializerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SerializerTests.swift; sourceTree = "<group>"; };
 		013C03CF20E5CA4C00ED0716 /* MessageTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageTests.swift; sourceTree = "<group>"; };
+		013C03D120E6982500ED0716 /* SocketTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SocketTests.swift; sourceTree = "<group>"; };
 		01E0A0A920E45A6D00ABDDB2 /* BBTimerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BBTimerTests.swift; sourceTree = "<group>"; };
 		0FFFFED52E39AEC83943F9BD /* BittyBird.podspec */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = BittyBird.podspec; path = ../BittyBird.podspec; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
 		554D107881F2D1976A253706 /* Pods_BittyBird_Tests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_BittyBird_Tests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -61,11 +63,11 @@
 		607FACC71AFB9204008FA782 = {
 			isa = PBXGroup;
 			children = (
-				607FACF51AFB993E008FA782 /* Podspec Metadata */,
-				607FACE81AFB9204008FA782 /* Tests */,
-				607FACD11AFB9204008FA782 /* Products */,
-				4930220E17A559958D39834E /* Pods */,
 				341BD3A21EC944530AB36664 /* Frameworks */,
+				4930220E17A559958D39834E /* Pods */,
+				607FACF51AFB993E008FA782 /* Podspec Metadata */,
+				607FACD11AFB9204008FA782 /* Products */,
+				607FACE81AFB9204008FA782 /* Tests */,
 			);
 			sourceTree = "<group>";
 		};
@@ -81,10 +83,11 @@
 			isa = PBXGroup;
 			children = (
 				01E0A0A920E45A6D00ABDDB2 /* BBTimerTests.swift */,
+				013C03CF20E5CA4C00ED0716 /* MessageTests.swift */,
+				013C03CA20E5860B00ED0716 /* SerializerTests.swift */,
+				013C03D120E6982500ED0716 /* SocketTests.swift */,
 				607FACEB1AFB9204008FA782 /* Tests.swift */,
 				607FACE91AFB9204008FA782 /* Supporting Files */,
-				013C03CA20E5860B00ED0716 /* SerializerTests.swift */,
-				013C03CF20E5CA4C00ED0716 /* MessageTests.swift */,
 			);
 			path = Tests;
 			sourceTree = "<group>";
@@ -226,6 +229,7 @@
 			files = (
 				607FACEC1AFB9204008FA782 /* Tests.swift in Sources */,
 				013C03D020E5CA4C00ED0716 /* MessageTests.swift in Sources */,
+				013C03D220E6982500ED0716 /* SocketTests.swift in Sources */,
 				013C03CB20E5860B00ED0716 /* SerializerTests.swift in Sources */,
 				01E0A0AA20E45A6D00ABDDB2 /* BBTimerTests.swift in Sources */,
 			);

@@ -13,7 +13,7 @@ import Nimble
 class MessageSpec: QuickSpec {
   override func spec() {
     describe("A MessageSpec") {
-      it("has `topic`, `event`, `payload`, `ref`, and `joinRef` properties") {
+      it("initializes with `topic`, `event`, `payload`, `ref`, and `joinRef` properties") {
         let message = Message.init(
           topic: "topic",
           event: "event",
@@ -22,6 +22,10 @@ class MessageSpec: QuickSpec {
           joinRef: "joinRef"
         )
         expect(message.topic) == "topic"
+        expect(message.event) == "event"
+        expect(message.payload) == ["key": "value"]
+        expect(message.ref) == "ref"
+        expect(message.joinRef) == "joinRef"
       }
 
       it("can be initialized without `joinRef` property") {
@@ -32,6 +36,10 @@ class MessageSpec: QuickSpec {
           ref: "ref"
         )
         expect(message.topic) == "topic"
+        expect(message.event) == "event"
+        expect(message.payload) == ["key": "value"]
+        expect(message.ref) == "ref"
+        expect(message.joinRef).to(beNil())
       }
     }
   }

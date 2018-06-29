@@ -12,6 +12,8 @@
 		013C03C920E585E300ED0716 /* Serializer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 013C03C720E585E300ED0716 /* Serializer.swift */; };
 		013C03CD20E5C7E500ED0716 /* Message.swift in Sources */ = {isa = PBXBuildFile; fileRef = 013C03CC20E5C7E500ED0716 /* Message.swift */; };
 		013C03CE20E5C7E500ED0716 /* Message.swift in Sources */ = {isa = PBXBuildFile; fileRef = 013C03CC20E5C7E500ED0716 /* Message.swift */; };
+		013C03D420E6988A00ED0716 /* Socket.swift in Sources */ = {isa = PBXBuildFile; fileRef = 013C03D320E6988A00ED0716 /* Socket.swift */; };
+		013C03D520E6988A00ED0716 /* Socket.swift in Sources */ = {isa = PBXBuildFile; fileRef = 013C03D320E6988A00ED0716 /* Socket.swift */; };
 		0294A6855588703F75A118A24EFD6BA9 /* Commons.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF85E33B532A9023AA96721E66BE040C /* Commons.swift */; };
 		084309947ABD739106FB19AA0AF17163 /* ExampleMetadata.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED0687C67F0B66CEC7F095A3E283C6B3 /* ExampleMetadata.swift */; };
 		0918D83B0C1A3EEB1078FAB6A9494516 /* Example.swift in Sources */ = {isa = PBXBuildFile; fileRef = 37C6FC6D7C6FE5786553D6D655DE3D10 /* Example.swift */; };
@@ -176,6 +178,7 @@
 /* Begin PBXFileReference section */
 		013C03C720E585E300ED0716 /* Serializer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = Serializer.swift; path = BittyBird/Classes/Serializer.swift; sourceTree = "<group>"; };
 		013C03CC20E5C7E500ED0716 /* Message.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = Message.swift; path = BittyBird/Classes/Message.swift; sourceTree = "<group>"; };
+		013C03D320E6988A00ED0716 /* Socket.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = Socket.swift; path = BittyBird/Classes/Socket.swift; sourceTree = "<group>"; };
 		034B84B6A2257705CEFC4760ED75A662 /* CwlMachBadInstructionHandler.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = CwlMachBadInstructionHandler.m; path = Carthage/Checkouts/CwlPreconditionTesting/Sources/CwlMachBadInstructionHandler/CwlMachBadInstructionHandler.m; sourceTree = "<group>"; };
 		07B678EED8C7BBDBF0432B94E3789950 /* SatisfyAnyOf.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = SatisfyAnyOf.swift; path = Sources/Nimble/Matchers/SatisfyAnyOf.swift; sourceTree = "<group>"; };
 		095103DF3E8292E2219D2EDDD9EA418E /* BeAnInstanceOf.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = BeAnInstanceOf.swift; path = Sources/Nimble/Matchers/BeAnInstanceOf.swift; sourceTree = "<group>"; };
@@ -649,6 +652,7 @@
 				0E8DA778E06C9EC12754428DE65DFF38 /* BBTimer.swift */,
 				013C03CC20E5C7E500ED0716 /* Message.swift */,
 				013C03C720E585E300ED0716 /* Serializer.swift */,
+				013C03D320E6988A00ED0716 /* Socket.swift */,
 				216BB7B50F61EC387B8EFC354B7DACC3 /* Pod */,
 				C9407B3D27D4A28355DB86E3451A5F81 /* Support Files */,
 			);
@@ -860,6 +864,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				013C03D520E6988A00ED0716 /* Socket.swift in Sources */,
 				013C03CE20E5C7E500ED0716 /* Message.swift in Sources */,
 				7A20E265BF2B5CC36CB0C9DF59235260 /* Pods-BittyBird_Tests-dummy.m in Sources */,
 				013C03C920E585E300ED0716 /* Serializer.swift in Sources */,
@@ -984,6 +989,7 @@
 			files = (
 				D272FC32A45D27ADC4276E2FFB2D3A38 /* BBTimer.swift in Sources */,
 				013C03CD20E5C7E500ED0716 /* Message.swift in Sources */,
+				013C03D420E6988A00ED0716 /* Socket.swift in Sources */,
 				013C03C820E585E300ED0716 /* Serializer.swift in Sources */,
 				91BA8AD69CE129A83B015C0B50C27948 /* BittyBird-dummy.m in Sources */,
 			);

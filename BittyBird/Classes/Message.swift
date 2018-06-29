@@ -9,19 +9,24 @@ import Foundation
 
 /// Encapsulates message properties in format to match Phoenix messages
 public struct Message {
+  /// The name of the room or channel
   let topic: String
+  /// The name of the event
   let event: String
+  /// The message data
   let payload: Dictionary <String, String>
+  /// An id for the message
   let ref: String
+  /// An id from joining a channel
   let joinRef: String?
 
   /**
    Initializes a new instance of Message without having to pass a `joinRef` property
    - Parameters:
-       - topic: Name of the channel
+       - topic: Name of the room or channel
        - event: Name of the event
        - payload: The message data
-       - ref: A id for the message
+       - ref: An id for the message
    - Returns: An instance of Message
    */
   init(topic: String, event: String, payload: Dictionary <String, String>, ref: String) {
