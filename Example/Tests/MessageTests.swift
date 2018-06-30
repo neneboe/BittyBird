@@ -23,7 +23,7 @@ class MessageSpec: QuickSpec {
         )
         expect(message.topic) == "topic"
         expect(message.event) == "event"
-        expect(message.payload) == ["key": "value"]
+        expect(message.payload["key"] as? String) == "value"
         expect(message.ref) == "ref"
         expect(message.joinRef) == "joinRef"
       }
@@ -37,7 +37,7 @@ class MessageSpec: QuickSpec {
         )
         expect(message.topic) == "topic"
         expect(message.event) == "event"
-        expect(message.payload) == ["key": "value"]
+        expect(message.payload["key"] as? String) == "value"
         expect(message.ref) == "ref"
         expect(message.joinRef).to(beNil())
       }

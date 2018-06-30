@@ -11,14 +11,10 @@ import Foundation
 public struct SocketOptions {
   public var timeout: Int?
   public var transport: ((URL) -> Any)?
-  public var encode: Any & CanSerialize
-
-//  this.encode = opts.encode || this.defaultEncoder
-//  this.decode = opts.decode || this.defaultDecoder
-//  this.heartbeatIntervalMs  = opts.heartbeatIntervalMs || 30000
-//  this.reconnectAfterMs     = opts.reconnectAfterMs || function(tries){
-//  return [1000, 2000, 5000, 10000][tries - 1] || 10000
-//  }
-//  this.logger               = opts.logger || function(){} // noop
-//  this.params               = opts.params || {}
+  public var encode: ((_ msg: PhxMessage) -> Any)?
+  public var decode: ((_ payload: Any) -> Any)?
+  public var heartbeatIntervalSeconds: Int?
+  public var reconnectAfterSeconds: ((_ tries: Int) -> Int)?
+  public var logger: Any?
+  public var params: Dictionary <String, Any>?
 }

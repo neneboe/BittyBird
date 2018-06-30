@@ -9,24 +9,25 @@ class SerializerSpec: QuickSpec {
   override func spec() {
     describe("A Serializer") {
       let key = "key"
-      let testMsg = Message(
+      let stringValue = "value"
+      let testMsg1 = Message(
         topic: "topic",
         event: "event",
-        payload: [key: "value"],
+        payload: [key: stringValue],
         ref: "ref"
       )
-      var binMsg = Data()
+      var binMsg1 = Data()
 
       beforeEach() {
-        binMsg = Data()
+        binMsg1 = Data()
         do {
-          try binMsg.pack(
+          try binMsg1.pack(
             [
-              "topic": testMsg.topic,
-              "event": testMsg.event,
-              "payload": testMsg.payload,
-              "ref": testMsg.ref,
-              "joinRef": testMsg.joinRef as Any
+              "topic": testMsg1.topic,
+              "event": testMsg1.event,
+              "payload": testMsg1.payload,
+              "ref": testMsg1.ref,
+              "joinRef": testMsg1.joinRef as Any
             ]
           )
         } catch {
@@ -34,24 +35,26 @@ class SerializerSpec: QuickSpec {
         }
       }
 
+      // TODO: Add more contexts
       describe(".encode(msg, callback)") {
         it("passes encoded `msg` to `callback`") {
           var encodedMsg = Data()
           let callback = {(data: Data) -> Void in encodedMsg = data}
-          Serializer.encode(msg: testMsg, callback: callback)
-          expect(encodedMsg) == binMsg
+          Serializer.encode(msg: testMsg1, callback: callback)
+          expect(encodedMsg) == binMsg1
         }
       }
 
+      // TODO: Add more contexts
       describe(".decode(rawPayload, callback)") {
         it("passes decoded `rawPayload` to `callback`") {
           var decodedMsg = Message(topic: "t", event: "e", payload: ["k": "v"], ref: "r") // doesn't match testMsg
           let callback = {(msg: Message) -> Void in decodedMsg = msg}
-          Serializer.decode(rawPayload: binMsg, callback: callback)
-          expect(decodedMsg.topic) == testMsg.topic
-          expect(decodedMsg.event) == testMsg.event
-          expect(decodedMsg.payload) == testMsg.payload
-          expect(decodedMsg.ref) == testMsg.ref
+          Serializer.decode(rawPayload: binMsg1, callback: callback)
+          expect(decodedMsg.topic) == testMsg1.topic
+          expect(decodedMsg.event) == testMsg1.event
+          expect(decodedMsg.payload[key] as? String) == stringValue
+          expect(decodedMsg.ref) == testMsg1.ref
           expect(decodedMsg.joinRef).to(beNil())
         }
       }

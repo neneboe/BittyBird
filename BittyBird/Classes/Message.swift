@@ -8,17 +8,17 @@
 import Foundation
 
 /// Encapsulates message properties in format to match Phoenix messages
-public struct Message {
+public struct Message: PhxMessage {
   /// The name of the room or channel
-  let topic: String
+  public var topic: String
   /// The name of the event
-  let event: String
+  public var event: String
   /// The message data
-  let payload: Dictionary <String, String>
+  public var payload: Dictionary <String, Any>
   /// An id for the message
-  let ref: String
+  public var ref: String
   /// An id from joining a channel
-  let joinRef: String?
+  public var joinRef: String?
 
   /**
    Initializes a new instance of Message without having to pass a `joinRef` property

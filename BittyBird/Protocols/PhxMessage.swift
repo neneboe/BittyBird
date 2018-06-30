@@ -6,3 +6,10 @@
 //
 
 import Foundation
+
+public protocol PhxMessage {
+  var topic: String { get }
+  var event: String { get }
+  var payload: Dictionary <String, Any> { get }
+  var ref: String { get }
+}

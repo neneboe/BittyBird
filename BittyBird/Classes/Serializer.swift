@@ -9,7 +9,11 @@ import Foundation
 import SwiftMsgPack
 
 /// Encodes and decodes messages using MessagePack
-open class Serializer, CanSerialize {
+open class Serializer: CanSerialize {
+  // typealiases to make Serializer conform to CanSerialize
+  public typealias T = Message
+  public typealias U = Data
+
   /**
    Encodes a Message into MessagePack.Data
 
@@ -17,7 +21,7 @@ open class Serializer, CanSerialize {
    - Parameter callback: Function that accepts MessagePack.Data with no return value
    - Returns: No return value
    */
-  open class func encode(msg: Message, callback: ((Data) -> Void)) -> Void {
+  public static func encode(msg: Message, callback: ((Data) -> Void)) {
     var encodedMsg = Data()
     do {
       try encodedMsg.pack(
@@ -43,7 +47,7 @@ open class Serializer, CanSerialize {
    - Parameter callback: Function that accepts a Message with no return value
    - Returns: No return value
    */
-  open class func decode(rawPayload: Data, callback: ((Message) -> Void)) -> Void {
+  public static func decode(rawPayload: Data, callback: ((Message) -> Void)) {
     let data: Data = rawPayload
     var decodedMsg: Message?
     var decodedData: Any?
@@ -63,7 +67,7 @@ open class Serializer, CanSerialize {
    - Parameter decodedData: Unpacked MessagePack.Data object
    - Returns: A Message instance
    */
-  private class func buildMessageFromData(decodedData: Any?) -> Message {
+  private static func buildMessageFromData(decodedData: Any?) -> Message {
     var msg: Message
     let castData = decodedData as! Dictionary <String, Any>
     if castData["joinRef"] as? String != nil {

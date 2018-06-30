@@ -13,11 +13,11 @@ import Nimble
 class SocketSpec: QuickSpec {
   override func spec() {
     describe("A Socket") {
-//      it("initializes with `timeout` and `reconnectAfterMs` properties") {
-//        let socket = Socket()
-//        expect(socket.timeout).notTo(beNil())
-//        expect(socket.reconnectAfterSeconds).notTo(beNil())
-//      }
+      it("initializes with `timeout` and `reconnectAfterMs` properties") {
+        let socket = Socket()
+        expect(socket.timeout).notTo(beNil())
+        expect(socket.reconnectAfterSeconds).notTo(beNil())
+      }
     }
   }
 }
