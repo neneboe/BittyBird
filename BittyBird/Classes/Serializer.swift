@@ -53,7 +53,7 @@ open class Serializer: CanSerialize {
     var decodedData: Any?
     do {
       decodedData = try data.unpack()
-      decodedMsg = self.buildMessageFromData(decodedData: decodedData)
+      decodedMsg = buildMessageFromData(decodedData: decodedData)
     } catch {
       print("Something went wrong while unpacking data: \(error)")
     }

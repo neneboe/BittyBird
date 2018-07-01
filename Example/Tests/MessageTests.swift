@@ -14,7 +14,7 @@ class MessageSpec: QuickSpec {
   override func spec() {
     describe("A MessageSpec") {
       it("initializes with `topic`, `event`, `payload`, `ref`, and `joinRef` properties") {
-        let message = Message.init(
+        let message = Message(
           topic: "topic",
           event: "event",
           payload: ["key": "value"],

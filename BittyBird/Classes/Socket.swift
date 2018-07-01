@@ -8,22 +8,25 @@
 import Foundation
 import Starscream
 
+/// A web socket connection to the server over which channels are multiplexed
 open class Socket {
   /// Timeout in seconds to trigger push timeouts
   public var timeout: Int
   /// Configurable, optional function that returns the reconnect interval in seconds
   public var reconnectAfterSeconds: ((_ tries: Int) -> Int)
 
+  /// The Starscream web socket connection
+  private let connection: WebSocket
   /// String of the URL of the server websocket end point
-  var endPoint: String
-  /// Configurable, optional websocket transport - uses Starscream WebSocket by default
-  var transport: Any
+  private let endPoint: String
+  // TODO: Configurable, optional websocket transport - uses Starscream WebSocket by default
+  //  private let transport: Any
   /// Configurable, optional interval in seconds to send heartbeat message
-  var heartbeatIntervalSeconds: Int
+  private let heartbeatIntervalSeconds: Int
   /// Configurable, optional logger function, defaults to noop
-  var logger: ((_ kind: String, _ msg: String, _ data: Any) -> Void)
+  private let logger: ((_ kind: String, _ msg: String, _ data: Any) -> Void)
   /// Configurable, optional params passed to server when connecting
-  var params: Dictionary <String, Any>
+  private let params: Dictionary <String, Any>
 
   /// List of instances of Channel that are connected via the socket
   var channels: Array <Channel> = []
@@ -57,7 +60,7 @@ open class Socket {
       return [1, 2, 5, 10][tries]
     }
     self.endPoint = endPoint
-    self.transport = opts.transport.self ?? WebSocket.self
+    self.connection = Socket.getConnectionFromEndPoint(endPoint: endPoint)
     self.heartbeatIntervalSeconds = opts.heartbeatIntervalSeconds ?? 30
     self.logger = opts.logger ?? {(kind: String, msg: String, data: Any) in ()}
     self.params = opts.params ?? [:]
@@ -71,6 +74,18 @@ open class Socket {
   }
 
   public func disconnect(_ callback: (() -> Void)? = nil) {
-    callback?()
+    if connection.isConnected {
+      connection.disconnect()
+      callback?()
+    }
+  }
+
+  private class func getConnectionFromEndPoint(endPoint: String) -> WebSocket {
+    let url = URL(string: endPoint)
+    if url != nil {
+      return WebSocket(url: url!)
+    } else {
+      fatalError("Malformed URL String \(endPoint)")
+    }
   }
 }

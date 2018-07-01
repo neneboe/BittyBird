@@ -35,8 +35,8 @@ class BBTimer {
    - Returns: No return value
    */
   public func reset() {
-    self.tries = 0
-    self.clearTimeout()
+    tries = 0
+    clearTimeout()
   }
 
   /**
@@ -44,8 +44,8 @@ class BBTimer {
    - Returns: No return value
    */
   public func scheduleTimeout() {
-    self.clearTimeout()
-    self.timer = Timer.scheduledTimer(
+    clearTimeout()
+    timer = Timer.scheduledTimer(
       timeInterval: TimeInterval(timerCalc(self.tries)),
       target: self,
       selector: #selector(onTimerTriggered),
@@ -56,13 +56,13 @@ class BBTimer {
 
   /// Stops timer
   private func clearTimeout() {
-    self.timer?.invalidate()
-    self.timer = nil
+    timer?.invalidate()
+    timer = nil
   }
 
   /// Increment number of tries and run callback
   @objc func onTimerTriggered() {
-    self.tries += 1
-    self.callback()
+    tries += 1
+    callback()
   }
 }
