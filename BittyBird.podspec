@@ -40,4 +40,5 @@ BittyBird is a Phoenix Channels Swift client that uses MessagePack for serializa
   # s.public_header_files = 'Pod/Classes/**/*.h'
   # s.frameworks = 'UIKit', 'MapKit'
   s.dependency 'SwiftMsgPack', '~> 1.0'
+  s.dependency 'Starscream', '~> 3.0.2'
 end

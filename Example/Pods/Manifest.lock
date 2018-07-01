@@ -1,8 +1,10 @@
 PODS:
   - BittyBird (0.1.0):
+    - Starscream (~> 3.0.2)
     - SwiftMsgPack (~> 1.0)
   - Nimble (7.0.3)
   - Quick (1.2.0)
+  - Starscream (3.0.5)
   - SwiftMsgPack (1.0.0)
 
 DEPENDENCIES:
@@ -14,6 +16,7 @@ SPEC REPOS:
   https://github.com/cocoapods/specs.git:
     - Nimble
     - Quick
+    - Starscream
     - SwiftMsgPack
 
 EXTERNAL SOURCES:
@@ -21,9 +24,10 @@ EXTERNAL SOURCES:
     :path: "../"
 
 SPEC CHECKSUMS:
-  BittyBird: 338f5fe989750f1cde335dda2f3e588ab6fcf8ff
+  BittyBird: a762c6184d827cd79a96ba0378586512aa16efcc
   Nimble: 7f5a9c447a33002645a071bddafbfb24ea70e0ac
   Quick: 58d203b1c5e27fff7229c4c1ae445ad7069a7a08
+  Starscream: faf918b2f2eff7d5dd21180646bf015a669673bd
   SwiftMsgPack: 2d36d4b1551716b45ed5a7bf8faca3d3e9d4c119
 
 PODFILE CHECKSUM: 8b83d948659ca0b37b9aad9b68a74989f726c246

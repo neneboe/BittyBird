@@ -23,6 +23,9 @@
   "dependencies": {
     "SwiftMsgPack": [
       "~> 1.0"
+    ],
+    "Starscream": [
+      "~> 3.0.2"
     ]
   }
 }
