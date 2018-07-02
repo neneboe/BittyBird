@@ -5,6 +5,10 @@ import Nimble
 @testable import BittyBird
 
 class BBTimerSpec: QuickSpec {
+  @objc func timerStub() {
+    ()
+  }
+
   override func spec() {
     describe("A BBTimer") {
       var callbackTriggered = false
@@ -76,9 +80,5 @@ class BBTimerSpec: QuickSpec {
         }
       }
     }
-  }
-
-  @objc func timerStub() {
-    ()
   }
 }

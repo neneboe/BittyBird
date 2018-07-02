@@ -7,7 +7,7 @@
 import Foundation
 
 /// Creates a timer that accepts a `timerCalc` function to perform calculated timeout retries, such as exponential backoff.
-class BBTimer {
+open class BBTimer {
   /// Function called when timer is triggered
   private let callback: (() -> Void)
   /// Function that accepts number of tries as a parameter and returns a timer duration in seconds

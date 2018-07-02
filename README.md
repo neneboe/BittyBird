@@ -30,7 +30,8 @@ To run the tests, clone the repo, run `pod install` from the Example directory, 
   * `BBTimer` instead of `Timer`
   * `Socket.socketProtocol` instead of `Socket.protocol`
   * `Socket.heartbeatIntervalSeconds` instead of `Socket.heartbeatIntervalMs`
-  * `Socket.reconnectAfterSeconds` instead of `Socket.reconnectAfterMs`   
+  * `Socket.reconnectAfterSeconds` instead of `Socket.reconnectAfterMs`
+  * `skipHeartbeat` is a property of `Socket` instead of `Socket.connection`
 
 #### Author
 

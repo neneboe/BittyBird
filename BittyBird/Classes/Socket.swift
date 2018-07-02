@@ -8,6 +8,14 @@
 import Foundation
 import Starscream
 
+/// Stores callbacks to be triggered on connection events
+public struct StateChangeCallbacks {
+  var open: Array <() -> Void> = []
+  var close: Array <() -> Void> = []
+  var error: Array <() -> Void> = []
+  var message: Array <() -> Void> = []
+}
+
 /// A web socket connection to the server over which channels are multiplexed
 open class Socket {
   /// API Version - matches phoenix.js
@@ -31,7 +39,7 @@ open class Socket {
   /// Configurable, optional interval in seconds to send heartbeat message
   public let heartbeatIntervalSeconds: Int
   /// Configurable, optional logger function, defaults to noop
-  public let logger: ((_ kind: String, _ msg: String, _ data: Any) -> Void)
+  public let logger: ((_ kind: String, _ msg: String, _ data: Any?) -> Void)
   /// Configurable, optional params passed to server when connecting
   public let params: Dictionary <String, Any>
 
@@ -48,15 +56,15 @@ open class Socket {
   /// Ref counter for the last heartbeat that was sent
   private var pendingHeartbeatRef: String? = nil
   /// Timer to use when attempting to reconnect
-  private var reconnectTimer: BBTimer!
+  public var reconnectTimer: BBTimer!
   /// Ref counter for each Message instance passed through the socket
   private var ref = 0
   /// Buffer for callbacks that will send messages once the socket has connected
-  private var sendBuffer: Array <() -> Void> = []
+  public var sendBuffer: Array <() -> Void> = []
+  /// Disable sending heartbeats by setting this to true.
+  public var skipHeartbeat = false
   /// Dictionary for storing arrays of callbacks to be run on certain socket events
-  private var stateChangeCallbacks: Dictionary <String, Array <() -> Void>> = [
-    "open": [], "close": [], "error": [], "message": []
-  ]
+  open var stateChangeCallbacks: StateChangeCallbacks = StateChangeCallbacks()
 
   /**
    Initializes a new instance of Socket
@@ -69,7 +77,7 @@ open class Socket {
     self.connection = connection
     self.endPointURL = connection.currentURL
     self.heartbeatIntervalSeconds = opts.heartbeatIntervalSeconds ?? Socket.HEARTBEATINTERVAL
-    self.logger = opts.logger ?? { (kind: String, msg: String, data: Any) in () }
+    self.logger = opts.logger ?? { (kind: String, msg: String, data: Any?) in () } // no-op
     self.params = opts.params ?? [:]
     self.reconnectAfterSeconds = opts.reconnectAfterSeconds ?? Socket.RECONNECTAFTERFUNC
     self.timeout = opts.timeout ?? Socket.TIMEOUT
@@ -91,11 +99,7 @@ open class Socket {
     self.init(connection: connection, opts: opts)
   }
 
-  /**
-   The protocol of the socket: either "wss" or "ws"
-
-   - Returns: Either "wss" or "ws"
-   */
+  /// The protocol of the socket: either "wss" or "ws"
   public var socketProtocol: String {
     get {
       let wssRegexPattern = "^wss:.+"
@@ -115,30 +119,81 @@ open class Socket {
 
   /// Connects the socket to server
   open func connect() {
-    guard !connection.isConnected else { return }
+    guard !isConnected else { return }
     connection.delegate = self
     connection.connect()
   }
 
-  open func log(kind: String, msg: String, data: Any) {
+  /**
+   Logs the message. You may override this method or pass a logger via the SocketOptions in initialization
+   to customize this.
+
+   - Parameter kind: The kind of message, i.e. "push", "receive", etc
+   - Parameter msg: The name of the message
+   - Parameter data: The message data
+   - Returns: No return value
+   */
+  open func log(kind: String, msg: String, data: Any? = nil) {
     logger(kind, msg, data)
   }
 
-  /// Called when the underlying Websocket connects to it's host
-  private func onConnectionOpen() {
+  /**
+   Registers callbacks for connection events
+   Example:
+      socket.onOpen { [unowned self] in print("Socket Connection Opened") }
+
+   - Parameter callback: Callback to register
+   */
+  public func onOpen(callback: @escaping () -> Void) { stateChangeCallbacks.open.append(callback) }
+  public func onClose(callback: @escaping () -> Void) { stateChangeCallbacks.close.append(callback) }
+  public func onError(callback: @escaping () -> Void) { stateChangeCallbacks.error.append(callback) }
+  public func onMessage(callback: @escaping () -> Void) { stateChangeCallbacks.message.append(callback) }
+
+
+  /// Called when `connection` connects to host
+  public func onConnOpen() {
+    self.log(kind: "transport", msg: "Connected to \(connection.currentURL)")
+    self.flushSendBuffer()
+    self.reconnectTimer.reset()
+    if !skipHeartbeat {
+      heartbeatTimer?.invalidate()
+      heartbeatTimer = Timer.scheduledTimer(
+        timeInterval: TimeInterval(heartbeatIntervalSeconds),
+        target: self,
+        selector: #selector(sendHeartbeat),
+        userInfo: nil,
+        repeats: true
+      )
+    }
+    stateChangeCallbacks.open.forEach({ $0() })
+  }
+
+  public func onConnClosed() {
 
   }
 
-  private func onConnectionClosed() {
+  public func onConnError(_ error: Error) {
 
   }
 
-  private func onConnectionError(_ error: Error) {
+  public func onConnMessage(_ rawMessage: String) {
 
   }
 
-  private func onConnectionMessage(_ rawMessage: String) {
+  open var isConnected: Bool {
+    get {
+      return connection.isConnected
+    }
+  }
 
+  @objc func sendHeartbeat() {
+    print("heartbeat")
+  }
+
+  open func flushSendBuffer() {
+    guard isConnected && sendBuffer.count > 0 else { return }
+    sendBuffer.forEach({ $0() })
+    sendBuffer = []
   }
 
   /**
@@ -160,19 +215,19 @@ open class Socket {
 
 extension Socket: WebSocketDelegate {
   public func websocketDidConnect(socket: WebSocketClient) {
-    self.onConnectionOpen()
+    self.onConnOpen()
   }
 
   public func websocketDidDisconnect(socket: WebSocketClient, error: Error?) {
     guard let error = error else {
-      self.onConnectionClosed()
+      self.onConnClosed()
       return }
 
-    self.onConnectionError(error)
+    self.onConnError(error)
   }
 
   public func websocketDidReceiveMessage(socket: WebSocketClient, text: String) {
-    self.onConnectionMessage(text)
+    self.onConnMessage(text)
   }
 
   public func websocketDidReceiveData(socket: WebSocketClient, data: Data) {
