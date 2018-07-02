@@ -176,8 +176,11 @@ open class Socket {
     stateChangeCallbacks.close.forEach({ $0() })
   }
 
-  public func onConnError(_ error: Error) {
-
+  public func onConnError(error: Any?) {
+    let errorMsg = error ?? ""
+    log(kind: "transport", msg: "error", data: "\(errorMsg)")
+    triggerChanError()
+    stateChangeCallbacks.error.forEach({ $0() })
   }
 
   public func triggerChanError() {
@@ -232,7 +235,7 @@ extension Socket: WebSocketDelegate {
       self.onConnClose()
       return }
 
-    self.onConnError(error)
+    self.onConnError(error: error)
   }
 
   public func websocketDidReceiveMessage(socket: WebSocketClient, text: String) {

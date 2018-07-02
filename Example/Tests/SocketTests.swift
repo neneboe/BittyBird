@@ -30,8 +30,10 @@ class MockConnectedSocket: Socket {
 
 class MockChannel: Channel {
   var triggerCalled = false
+  var triggerMsg = Message()
   override func trigger(msg: Message) {
     triggerCalled = true
+    triggerMsg = msg
   }
 }
 
@@ -284,7 +286,7 @@ class SocketSpec: QuickSpec {
       }
 
       describe(".onConnClose") {
-        it("logs an open message") {
+        it("logs a close message") {
           var theKind = ""
           var theMsg = ""
           let socketOptions = SocketOptions(logger: { (_ kind, _ msg, _ data) in
@@ -325,6 +327,52 @@ class SocketSpec: QuickSpec {
           wsSocket.onConnClose()
           expect(callback1Triggered).to(beTrue())
           expect(callback2Triggered).to(beTrue())
+        }
+      }
+
+      describe(".onConnError") {
+        it("logs an error message") {
+          var theKind = ""
+          var theMsg = ""
+          var theData = ""
+          let socketOptions = SocketOptions(logger: { (_ kind, _ msg, _ data) in
+            theKind = kind
+            theMsg = msg
+            theData = data as! String
+          })
+          let configuredSocket = Socket(endPoint: wsEndPoint, opts: socketOptions)
+          configuredSocket.onConnError(error: "the error msg")
+          expect(theKind) == "transport"
+          expect(theMsg) == "error"
+          expect(theData) == "the error msg"
+        }
+
+        it("triggers errors in socket channels") {
+          let mockChannel = MockChannel()
+          wsSocket.channels = [mockChannel]
+          wsSocket.onConnError(error: "error")
+          expect(mockChannel.triggerCalled).to(beTrue())
+        }
+
+        it("triggers each callback in `stateChangeCallbacks.error`") {
+          var callback1Triggered = false
+          var callback2Triggered = false
+          let callback1 = { () -> Void in callback1Triggered = true }
+          let callback2 = { () -> Void in callback2Triggered = true }
+          wsSocket.stateChangeCallbacks.error = [callback1, callback2]
+          wsSocket.onConnError(error: "error")
+          expect(callback1Triggered).to(beTrue())
+          expect(callback2Triggered).to(beTrue())
+        }
+      }
+
+      describe(".triggerChanError") {
+        it("sends an error message to socket's channels") {
+          let mockChannel = MockChannel()
+          wsSocket.channels = [mockChannel]
+          wsSocket.onConnError(error: "error")
+          expect(mockChannel.triggerCalled).to(beTrue())
+          expect(mockChannel.triggerMsg.event) == "error"
         }
       }
 
