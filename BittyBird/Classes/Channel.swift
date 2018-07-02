@@ -7,6 +7,6 @@
 
 import Foundation
 
-class Channel {
+open class Channel {
 
 }

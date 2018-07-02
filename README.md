@@ -25,6 +25,13 @@ To run the tests, clone the repo, run `pod install` from the Example directory, 
 
 ## About
 
+#### API Differences from Phoenix JS Client
+
+  * `BBTimer` instead of `Timer`
+  * `Socket.socketProtocol` instead of `Socket.protocol`
+  * `Socket.heartbeatIntervalSeconds` instead of `Socket.heartbeatIntervalMs`
+  * `Socket.reconnectAfterSeconds` instead of `Socket.reconnectAfterMs`   
+
 #### Author
 
 Nick Eneboe - Shout out to SwiftPhoenixClient though. This repo is very nearly a fork of SwiftPhoenixClient, but I wanted to write it from scratch for my own practice.
