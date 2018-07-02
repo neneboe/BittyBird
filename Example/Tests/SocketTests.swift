@@ -28,6 +28,13 @@ class MockConnectedSocket: Socket {
   }
 }
 
+class MockChannel: Channel {
+  var triggerCalled = false
+  override func trigger(msg: Message) {
+    triggerCalled = true
+  }
+}
+
 class SocketSpec: QuickSpec {
   @objc func timerStub() {
     ()
@@ -42,6 +49,7 @@ class SocketSpec: QuickSpec {
       var mockConnection = MockConnection(url: URL(string: wsEndPoint)!)
       var mockSocket = Socket(connection: mockConnection)
       var mockConnectedSocket = MockConnectedSocket(connection: mockConnection)
+      var testTimer: Timer?
 
       beforeEach {
         wsSocket = Socket(endPoint: wsEndPoint)
@@ -49,6 +57,17 @@ class SocketSpec: QuickSpec {
         mockConnection = MockConnection(url: URL(string: wsEndPoint)!)
         mockSocket = Socket(connection: mockConnection)
         mockConnectedSocket = MockConnectedSocket(connection: mockConnection)
+        testTimer = Timer.scheduledTimer(
+          timeInterval: 5,
+          target: self,
+          selector: #selector(self.timerStub),
+          userInfo: nil,
+          repeats: false
+        )
+      }
+
+      afterEach {
+        testTimer!.invalidate()
       }
 
       describe("initializer") {
@@ -231,18 +250,12 @@ class SocketSpec: QuickSpec {
           }
 
           it("clears existing `heartbeatTimer`") {
-            let testTimer = Timer.scheduledTimer(
-              timeInterval: 5,
-              target: self,
-              selector: #selector(self.timerStub),
-              userInfo: nil,
-              repeats: false
-            )
-            wsSocket.heartbeatTimer = testTimer
-            precondition(testTimer.isValid)
+            let existingTimer = testTimer!
+            wsSocket.heartbeatTimer = existingTimer
+            precondition(existingTimer.isValid)
             wsSocket.onConnOpen()
-            expect(testTimer.isValid).to(beFalse())
-            expect(wsSocket.heartbeatTimer) != testTimer
+            expect(existingTimer.isValid).to(beFalse())
+            expect(wsSocket.heartbeatTimer) != existingTimer
           }
           it("sets and starts `heartbeatTimer`") {
             wsSocket.onConnOpen()
@@ -265,6 +278,51 @@ class SocketSpec: QuickSpec {
           let callback2 = { () -> Void in callback2Triggered = true }
           wsSocket.stateChangeCallbacks.open = [callback1, callback2]
           wsSocket.onConnOpen()
+          expect(callback1Triggered).to(beTrue())
+          expect(callback2Triggered).to(beTrue())
+        }
+      }
+
+      describe(".onConnClose") {
+        it("logs an open message") {
+          var theKind = ""
+          var theMsg = ""
+          let socketOptions = SocketOptions(logger: { (_ kind, _ msg, _ data) in
+            theKind = kind
+            theMsg = msg
+          })
+          let configuredSocket = Socket(endPoint: wsEndPoint, opts: socketOptions)
+          configuredSocket.onConnClose()
+          expect(theKind) == "transport"
+          expect(theMsg) == "close"
+        }
+
+        it("triggers errors in socket channels") {
+          let mockChannel = MockChannel()
+          wsSocket.channels = [mockChannel]
+          wsSocket.onConnClose()
+          expect(mockChannel.triggerCalled).to(beTrue())
+        }
+
+        it("clears `heartbeatTimer`") {
+          wsSocket.heartbeatTimer = testTimer!
+          wsSocket.onConnClose()
+          expect(wsSocket.heartbeatTimer?.isValid).to(beFalse())
+        }
+
+        it("starts the `reconnectTimer`") {
+          precondition(wsSocket.reconnectTimer.timer == nil)
+          wsSocket.onConnClose()
+          expect(wsSocket.reconnectTimer.timer?.isValid).to(beTrue())
+        }
+
+        it("triggers each callback in `stateChangeCallbacks.close`") {
+          var callback1Triggered = false
+          var callback2Triggered = false
+          let callback1 = { () -> Void in callback1Triggered = true }
+          let callback2 = { () -> Void in callback2Triggered = true }
+          wsSocket.stateChangeCallbacks.close = [callback1, callback2]
+          wsSocket.onConnClose()
           expect(callback1Triggered).to(beTrue())
           expect(callback2Triggered).to(beTrue())
         }

@@ -21,23 +21,6 @@ public struct Message: PhxMessage {
   public var joinRef: String?
 
   /**
-   Initializes a new instance of Message without having to pass a `joinRef` property
-   - Parameters:
-       - topic: Name of the room or channel
-       - event: Name of the event
-       - payload: The message data
-       - ref: An id for the message
-   - Returns: An instance of Message
-   */
-  init(topic: String, event: String, payload: Dictionary <String, String>, ref: String) {
-    self.topic = topic
-    self.event = event
-    self.payload = payload
-    self.ref = ref
-    self.joinRef = nil
-  }
-
-  /**
    Initializes a new instance of Message
    - Parameters:
        - topic: Name of the channel
@@ -47,7 +30,13 @@ public struct Message: PhxMessage {
        - joinRef: An id from joining a channel
    - Returns: An instance of Message
    */
-  init(topic: String, event: String, payload: Dictionary <String, String>, ref: String, joinRef: String) {
+  init(
+    topic: String = "",
+    event: String = "",
+    payload: Dictionary <String, Any> = [:],
+    ref: String = "",
+    joinRef: String? = nil
+  ) {
     self.topic = topic
     self.event = event
     self.payload = payload

@@ -68,24 +68,13 @@ open class Serializer: CanSerialize {
    - Returns: A Message instance
    */
   private static func buildMessageFromData(decodedData: Any?) -> Message {
-    var msg: Message
     let castData = decodedData as! Dictionary <String, Any>
-    if castData["joinRef"] as? String != nil {
-      msg = Message(
-        topic: castData["topic"] as! String,
-        event: castData["event"] as! String,
-        payload: castData["payload"] as! Dictionary <String, String>,
-        ref: castData["ref"] as! String,
-        joinRef: castData["joinRef"] as! String
-      )
-    } else {
-      msg = Message(
-        topic: castData["topic"] as! String,
-        event: castData["event"] as! String,
-        payload: castData["payload"] as! Dictionary <String, String>,
-        ref: castData["ref"] as! String
-      )
-    }
-    return msg
+    return Message(
+      topic: castData["topic"] as! String,
+      event: castData["event"] as! String,
+      payload: castData["payload"] as! Dictionary <String, Any>,
+      ref: castData["ref"] as! String,
+      joinRef: castData["joinRef"] as? String
+    )
   }
 }

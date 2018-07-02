@@ -168,12 +168,21 @@ open class Socket {
     stateChangeCallbacks.open.forEach({ $0() })
   }
 
-  public func onConnClosed() {
-
+  public func onConnClose() {
+    log(kind: "transport", msg: "close")
+    triggerChanError()
+    heartbeatTimer?.invalidate()
+    reconnectTimer.scheduleTimeout()
+    stateChangeCallbacks.close.forEach({ $0() })
   }
 
   public func onConnError(_ error: Error) {
 
+  }
+
+  public func triggerChanError() {
+    let errorMessage = Message(event: "error")
+    channels.forEach({ $0.trigger(msg: errorMessage) })
   }
 
   public func onConnMessage(_ rawMessage: String) {
@@ -220,7 +229,7 @@ extension Socket: WebSocketDelegate {
 
   public func websocketDidDisconnect(socket: WebSocketClient, error: Error?) {
     guard let error = error else {
-      self.onConnClosed()
+      self.onConnClose()
       return }
 
     self.onConnError(error)
