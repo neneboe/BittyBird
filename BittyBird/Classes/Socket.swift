@@ -15,7 +15,7 @@ open class Socket {
   /// Default heartbeat interval in seconds
   static let HEARTBEATINTERVAL = 30
   /// Default function to use for reconnectAfterSeconds
-  static let RECONNECTAFTERFUNC = {(tries: Int) -> Int in
+  static let RECONNECTAFTERFUNC = { (tries: Int) -> Int in
     guard tries < 4 else { return 10 }
     return [1, 2, 5, 10][tries]
   }
@@ -69,7 +69,7 @@ open class Socket {
     self.connection = connection
     self.endPointURL = connection.currentURL
     self.heartbeatIntervalSeconds = opts.heartbeatIntervalSeconds ?? Socket.HEARTBEATINTERVAL
-    self.logger = opts.logger ?? {(kind: String, msg: String, data: Any) in ()}
+    self.logger = opts.logger ?? { (kind: String, msg: String, data: Any) in () }
     self.params = opts.params ?? [:]
     self.reconnectAfterSeconds = opts.reconnectAfterSeconds ?? Socket.RECONNECTAFTERFUNC
     self.timeout = opts.timeout ?? Socket.TIMEOUT
@@ -106,13 +106,18 @@ open class Socket {
     }
   }
 
+  /// Disconnects the socket and triggers optional callback
   open func disconnect(_ callback: (() -> Void)? = nil) {
+    connection.delegate = nil
     connection.disconnect(forceTimeout: nil, closeCode: CloseCode.normal.rawValue)
     callback?()
   }
 
+  /// Connects the socket to server
   open func connect() {
-
+    guard !connection.isConnected else { return }
+    connection.delegate = self
+    connection.connect()
   }
 
   open func log(kind: String, msg: String, data: Any) {

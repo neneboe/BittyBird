@@ -27,10 +27,14 @@ class SocketSpec: QuickSpec {
       let wssEndPoint = "wss://localhost:4000/socket/websocket"
       var wsSocket = Socket(endPoint: wsEndPoint)
       var wssSocket = Socket(endPoint: wssEndPoint)
+      var mockConnection = MockWebSocket(url: URL(string: wsEndPoint)!)
+      var mockSocket = Socket(connection: mockConnection)
 
       beforeEach {
         wsSocket = Socket(endPoint: wsEndPoint)
         wssSocket = Socket(endPoint: wssEndPoint)
+        mockConnection = MockWebSocket(url: URL(string: wsEndPoint)!)
+        mockSocket = Socket(connection: mockConnection)
       }
 
       describe("initializer") {
@@ -97,11 +101,36 @@ class SocketSpec: QuickSpec {
 
       describe(".disconnect") {
         it("calls disconnect on `connection`") {
-          let mockConnection = MockWebSocket(url: URL(string: wsEndPoint)!)
-          let mockSocket = Socket(connection: mockConnection)
           precondition(mockConnection.disconnectCalled == false)
           mockSocket.disconnect()
           expect(mockConnection.disconnectCalled).to(beTrue())
+        }
+
+        it("resets `connection.delegate` to nil") {
+          mockConnection.delegate = mockSocket
+          precondition(mockConnection.delegate != nil)
+          mockSocket.disconnect()
+          expect(mockConnection.delegate).to(beNil())
+        }
+
+        it("triggers the callback if one is passed") {
+          var callbackTriggered = false
+          mockSocket.disconnect() { () -> Void in callbackTriggered = true }
+          expect(callbackTriggered).to(beTrue())
+        }
+      }
+
+      describe(".connect") {
+        it("calls connect on `connection`") {
+          precondition(mockConnection.connectCalled == false)
+          mockSocket.connect()
+          expect(mockConnection.connectCalled).to(beTrue())
+        }
+
+        it("sets `connection.delete` to socket") {
+          precondition(mockConnection.delegate == nil)
+          mockSocket.connect()
+          expect(mockConnection.delegate).toNot(beNil())
         }
       }
     }

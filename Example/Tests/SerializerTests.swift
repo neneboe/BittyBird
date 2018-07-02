@@ -36,17 +36,17 @@ class SerializerSpec: QuickSpec {
       }
 
       // TODO: Add more contexts
-      describe(".encode(msg, callback)") {
+      describe("#encode(msg, callback)") {
         it("passes encoded `msg` to `callback`") {
           var encodedMsg = Data()
-          let callback = {(data: Data) -> Void in encodedMsg = data}
+          let callback = { (data: Data) -> Void in encodedMsg = data }
           Serializer.encode(msg: testMsg1, callback: callback)
           expect(encodedMsg) == binMsg1
         }
       }
 
       // TODO: Add more contexts
-      describe(".decode(rawPayload, callback)") {
+      describe("#decode(rawPayload, callback)") {
         it("passes decoded `rawPayload` to `callback`") {
           var decodedMsg = Message(topic: "t", event: "e", payload: ["k": "v"], ref: "r") // doesn't match testMsg
           let callback = {(msg: Message) -> Void in decodedMsg = msg}

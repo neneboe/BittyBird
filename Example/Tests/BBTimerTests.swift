@@ -8,8 +8,8 @@ class BBTimerSpec: QuickSpec {
   override func spec() {
     describe("A BBTimer") {
       var callbackTriggered = false
-      let callback = {() -> Void in callbackTriggered = true}
-      let timerCalc = {(tries: Int) -> Int in return 0}
+      let callback = { () -> Void in callbackTriggered = true }
+      let timerCalc = { (tries: Int) -> Int in return 0 }
 
       beforeEach {
         callbackTriggered = false
@@ -21,7 +21,7 @@ class BBTimerSpec: QuickSpec {
         expect(bbtimer.tries) == 0
       }
 
-      describe("#reset") {
+      describe(".reset") {
         it("sets `tries` back to 0") {
           let bbtimer = BBTimer(callback: callback, timerCalc: timerCalc)
           bbtimer.tries = 1
@@ -45,7 +45,7 @@ class BBTimerSpec: QuickSpec {
         }
       }
 
-      describe("#scheduledTimeout") {
+      describe(".scheduledTimeout") {
         it("clears any current timers and schedules a timer") {
           let bbtimer = BBTimer(callback: callback, timerCalc: timerCalc)
           let existingTimer = Timer.scheduledTimer(
