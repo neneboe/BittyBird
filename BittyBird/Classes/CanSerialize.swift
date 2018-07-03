@@ -10,6 +10,6 @@ import Foundation
 public protocol CanSerialize {
   associatedtype T: PhxMessage
   associatedtype U
-  static func encode(msg: T, callback: ((U) -> Void))
-  static func decode(rawPayload: U, callback: ((T) -> Void))
+  func encode(msg: T, callback: ((U) -> Void))
+  func decode(rawPayload: U, callback: ((T) -> Void))
 }

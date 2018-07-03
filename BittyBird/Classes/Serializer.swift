@@ -14,14 +14,15 @@ open class Serializer: CanSerialize {
   public typealias T = Message
   public typealias U = Data
 
+  public init() {}
+
   /**
    Encodes a Message into MessagePack.Data
 
    - Parameter msg: Message instance to be packed
    - Parameter callback: Function that accepts MessagePack.Data with no return value
-   - Returns: No return value
    */
-  public static func encode(msg: Message, callback: ((Data) -> Void)) {
+  open func encode(msg: Message, callback: ((Data) -> Void)) -> Void {
     var encodedMsg = Data()
     do {
       try encodedMsg.pack(
@@ -45,9 +46,8 @@ open class Serializer: CanSerialize {
 
    - Parameter rawPayload: Binary data from server
    - Parameter callback: Function that accepts a Message with no return value
-   - Returns: No return value
    */
-  public static func decode(rawPayload: Data, callback: ((Message) -> Void)) {
+  open func decode(rawPayload: Data, callback: ((Message) -> Void)) -> Void {
     let data: Data = rawPayload
     var decodedMsg: Message?
     var decodedData: Any?
@@ -67,7 +67,7 @@ open class Serializer: CanSerialize {
    - Parameter decodedData: Unpacked MessagePack.Data object
    - Returns: A Message instance
    */
-  private static func buildMessageFromData(decodedData: Any?) -> Message {
+  private func buildMessageFromData(decodedData: Any?) -> Message {
     let castData = decodedData as! Dictionary <String, Any>
     return Message(
       topic: castData["topic"] as! String,

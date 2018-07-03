@@ -33,6 +33,7 @@ To run the tests, clone the repo, run `pod install` from the Example directory, 
   * `Socket.reconnectAfterSeconds` instead of `Socket.reconnectAfterMs`
   * `skipHeartbeat` is a property of `Socket` instead of `Socket.connection`
   * No `Socket.connectionState` method. Starscream doesn't yet support this.
+  * `Socket.push` takes an instance of `Message` as a param instead of a generic data object
 
 #### Author
 

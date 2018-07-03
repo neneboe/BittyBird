@@ -32,17 +32,13 @@ open class BBTimer {
 
   /**
    Resets tries to 0 and stops the current timer
-   - Returns: No return value
    */
   public func reset() {
     tries = 0
     clearTimeout()
   }
 
-  /**
-   Cancels any previous scheduleTimeout and schedules callback
-   - Returns: No return value
-   */
+  /// Cancels any previous scheduleTimeout and schedules callback
   public func scheduleTimeout() {
     clearTimeout()
     timer = Timer.scheduledTimer(

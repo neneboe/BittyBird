@@ -8,6 +8,7 @@ import SwiftMsgPack
 class SerializerSpec: QuickSpec {
   override func spec() {
     describe("A Serializer") {
+      let serializer = Serializer()
       let key = "key"
       let stringValue = "value"
       let testMsg1 = Message(
@@ -40,7 +41,7 @@ class SerializerSpec: QuickSpec {
         it("passes encoded `msg` to `callback`") {
           var encodedMsg = Data()
           let callback = { (data: Data) -> Void in encodedMsg = data }
-          Serializer.encode(msg: testMsg1, callback: callback)
+          serializer.encode(msg: testMsg1, callback: callback)
           expect(encodedMsg) == binMsg1
         }
       }
@@ -50,7 +51,7 @@ class SerializerSpec: QuickSpec {
         it("passes decoded `rawPayload` to `callback`") {
           var decodedMsg = Message(topic: "t", event: "e", payload: ["k": "v"], ref: "r") // doesn't match testMsg
           let callback = {(msg: Message) -> Void in decodedMsg = msg}
-          Serializer.decode(rawPayload: binMsg1, callback: callback)
+          serializer.decode(rawPayload: binMsg1, callback: callback)
           expect(decodedMsg.topic) == testMsg1.topic
           expect(decodedMsg.event) == testMsg1.event
           expect(decodedMsg.payload[key] as? String) == stringValue

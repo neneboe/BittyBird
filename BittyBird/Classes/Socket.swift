@@ -46,7 +46,10 @@ open class Socket {
   // TODO: Configurable, optional websocket transport - uses Starscream WebSocket by default
   //  private let transport: Any
   /// The Starscream web socket connection
-  public let connection: WebSocket
+  open let connection: WebSocket
+  /// The function used for encoding
+  open let serializer: Serializer
+
   /// List of instances of Channel that are connected via the socket
   public var channels: Array <Channel> = []
   /// The URL, including the params, of the socket server
@@ -81,6 +84,7 @@ open class Socket {
     self.params = opts.params ?? [:]
     self.reconnectAfterSeconds = opts.reconnectAfterSeconds ?? Socket.RECONNECTAFTERFUNC
     self.timeout = opts.timeout ?? Socket.TIMEOUT
+    self.serializer = opts.serializer ?? Serializer()
     self.reconnectTimer = BBTimer(callback: {
       self.disconnect({ self.connect() })
     }, timerCalc: reconnectAfterSeconds)
@@ -100,7 +104,7 @@ open class Socket {
   }
 
   /// The protocol of the socket: either "wss" or "ws"
-  public var socketProtocol: String {
+  open var socketProtocol: String {
     get {
       let wssRegexPattern = "^wss:.+"
       let wssRegex = try! NSRegularExpression(pattern: wssRegexPattern, options: .caseInsensitive)
@@ -128,10 +132,9 @@ open class Socket {
    Logs the message. You may override this method or pass a logger via the SocketOptions in initialization
    to customize this.
 
-   - Parameter kind: The kind of message, i.e. "push", "receive", etc
+   - Parameter kind: The kind of message, E.g. "push", "receive", etc
    - Parameter msg: The name of the message
    - Parameter data: The message data
-   - Returns: No return value
    */
   open func log(kind: String, msg: String, data: Any? = nil) {
     logger(kind, msg, data)
@@ -144,14 +147,14 @@ open class Socket {
 
    - Parameter callback: Callback to register
    */
-  public func onOpen(callback: @escaping () -> Void) { stateChangeCallbacks.open.append(callback) }
-  public func onClose(callback: @escaping () -> Void) { stateChangeCallbacks.close.append(callback) }
-  public func onError(callback: @escaping () -> Void) { stateChangeCallbacks.error.append(callback) }
-  public func onMessage(callback: @escaping () -> Void) { stateChangeCallbacks.message.append(callback) }
+  open func onOpen(callback: @escaping () -> Void) { stateChangeCallbacks.open.append(callback) }
+  open func onClose(callback: @escaping () -> Void) { stateChangeCallbacks.close.append(callback) }
+  open func onError(callback: @escaping () -> Void) { stateChangeCallbacks.error.append(callback) }
+  open func onMessage(callback: @escaping () -> Void) { stateChangeCallbacks.message.append(callback) }
 
 
   /// Called when `connection` connects to host
-  public func onConnOpen() {
+  open func onConnOpen() {
     self.log(kind: "transport", msg: "Connected to \(connection.currentURL)")
     self.flushSendBuffer()
     self.reconnectTimer.reset()
@@ -168,7 +171,8 @@ open class Socket {
     stateChangeCallbacks.open.forEach({ $0() })
   }
 
-  public func onConnClose() {
+  /// Called when `connection` closes
+  open func onConnClose() {
     log(kind: "transport", msg: "close")
     triggerChanError()
     heartbeatTimer?.invalidate()
@@ -176,26 +180,72 @@ open class Socket {
     stateChangeCallbacks.close.forEach({ $0() })
   }
 
-  public func onConnError(error: Any?) {
+  /**
+   Called when error is sent over `connection`
+
+   - Parameter error: The error message
+   */
+  open func onConnError(error: Any?) {
     let errorMsg = error ?? ""
     log(kind: "transport", msg: "error", data: "\(errorMsg)")
     triggerChanError()
     stateChangeCallbacks.error.forEach({ $0() })
   }
 
-  public func triggerChanError() {
+  /// Pushes an error message out to every channel connected over the socket
+  open func triggerChanError() {
     let errorMessage = Message(event: "error")
     channels.forEach({ $0.trigger(msg: errorMessage) })
   }
 
-  public func onConnMessage(_ rawMessage: String) {
+  /// Whether the connection is connected
+  open var isConnected: Bool { get { return connection.isConnected }}
 
+  /**
+   Removes the Channel from the socket. This does not cause the channel to
+   inform the server that it is leaving. You should call channel.leave() first.
+
+   - Parameter channel: The channel to remove from the socket
+   */
+  open func remove(channel: Channel) {
+//    channels = channels.filter({ $0.joinRef != channel.joinRef })
   }
 
-  open var isConnected: Bool {
-    get {
-      return connection.isConnected
+  /**
+   Creates a new channel and adds it to `channels`
+
+   - Parameter topic: The channel's topic. E.g. "room:lobby"
+   - Parameter chanParams: Params sent to server when channel tries to join
+   - Returns: A new Channel instance
+   */
+  open func channel(topic: String, chanParams: Dictionary <String, Any>) -> Channel {
+    let chan = Channel(topic: topic, params: chanParams, socket: self)
+    channels.append(chan)
+    return chan
+  }
+
+  /**
+   Push a message to the server
+
+   - Parameter msg: An instance of Message
+   */
+  open func push(msg: Message) {
+    let callback = { () -> Void in
+      self.serializer.encode(msg: msg, callback: { (data) -> Void in
+        self.connection.write(data: data)
+      })
     }
+    log(
+      kind: "push",
+      msg: "\(msg.topic) \(msg.event) (\(msg.joinRef ?? ""), \(msg.ref))",
+      data: msg.payload
+    )
+    if isConnected { callback() }
+    else { self.sendBuffer.append(callback) }
+  }
+
+  open func onConnMessage(_ rawMessage: String) {
+
   }
 
   @objc func sendHeartbeat() {
@@ -226,11 +276,11 @@ open class Socket {
 }
 
 extension Socket: WebSocketDelegate {
-  public func websocketDidConnect(socket: WebSocketClient) {
+  open func websocketDidConnect(socket: WebSocketClient) {
     self.onConnOpen()
   }
 
-  public func websocketDidDisconnect(socket: WebSocketClient, error: Error?) {
+  open func websocketDidDisconnect(socket: WebSocketClient, error: Error?) {
     guard let error = error else {
       self.onConnClose()
       return }
@@ -238,11 +288,11 @@ extension Socket: WebSocketDelegate {
     self.onConnError(error: error)
   }
 
-  public func websocketDidReceiveMessage(socket: WebSocketClient, text: String) {
+  open func websocketDidReceiveMessage(socket: WebSocketClient, text: String) {
     self.onConnMessage(text)
   }
 
-  public func websocketDidReceiveData(socket: WebSocketClient, data: Data) {
+  open func websocketDidReceiveData(socket: WebSocketClient, data: Data) {
     /* no-op */
   }
 }

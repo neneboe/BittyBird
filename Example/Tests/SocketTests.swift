@@ -37,6 +37,13 @@ class MockChannel: Channel {
   }
 }
 
+class MockSerializer: Serializer {
+  var encodeCalled = false
+  override func encode(msg: Message, callback: ((Data) -> Void)) {
+    encodeCalled = true
+  }
+}
+
 class SocketSpec: QuickSpec {
   @objc func timerStub() {
     ()
@@ -52,6 +59,7 @@ class SocketSpec: QuickSpec {
       var mockSocket = Socket(connection: mockConnection)
       var mockConnectedSocket = MockConnectedSocket(connection: mockConnection)
       var testTimer: Timer?
+      var mockChannel = MockChannel(topic: "test:room", params: ["k": "v"], socket: wsSocket)
 
       beforeEach {
         wsSocket = Socket(endPoint: wsEndPoint)
@@ -59,6 +67,7 @@ class SocketSpec: QuickSpec {
         mockConnection = MockConnection(url: URL(string: wsEndPoint)!)
         mockSocket = Socket(connection: mockConnection)
         mockConnectedSocket = MockConnectedSocket(connection: mockConnection)
+        mockChannel = MockChannel(topic: "test:room", params: ["k": "v"], socket: wsSocket)
         testTimer = Timer.scheduledTimer(
           timeInterval: 5,
           target: self,
@@ -73,6 +82,7 @@ class SocketSpec: QuickSpec {
       }
 
       describe("initializer") {
+        // TODO: Check for more properties
         it("sets the correct property names") {
           expect(wsSocket.timeout).notTo(beNil())
           expect(wsSocket.reconnectAfterSeconds).notTo(beNil())
@@ -119,23 +129,15 @@ class SocketSpec: QuickSpec {
         }
       }
 
-      describe("computed properties") {
-        describe("`socketProtocol`") {
-          context("when endpoint protocol is wss") {
-            it("returns the string 'wss'") {
-              expect(wssSocket.socketProtocol) == "wss"
-            }
-          }
-          context("when endpoint protocol is ws") {
-            it("returns the string 'ws'") {
-              expect(wsSocket.socketProtocol) == "ws"
-            }
+      describe("`socketProtocol`") {
+        context("when endpoint protocol is wss") {
+          it("returns the string 'wss'") {
+            expect(wssSocket.socketProtocol) == "wss"
           }
         }
-
-        describe("`isConnected`") {
-          it("returns `connection.isConnected`") {
-            expect(wsSocket.isConnected) == wsSocket.connection.isConnected
+        context("when endpoint protocol is ws") {
+          it("returns the string 'ws'") {
+            expect(wsSocket.socketProtocol) == "ws"
           }
         }
       }
@@ -300,7 +302,6 @@ class SocketSpec: QuickSpec {
         }
 
         it("triggers errors in socket channels") {
-          let mockChannel = MockChannel()
           wsSocket.channels = [mockChannel]
           wsSocket.onConnClose()
           expect(mockChannel.triggerCalled).to(beTrue())
@@ -348,7 +349,6 @@ class SocketSpec: QuickSpec {
         }
 
         it("triggers errors in socket channels") {
-          let mockChannel = MockChannel()
           wsSocket.channels = [mockChannel]
           wsSocket.onConnError(error: "error")
           expect(mockChannel.triggerCalled).to(beTrue())
@@ -368,11 +368,84 @@ class SocketSpec: QuickSpec {
 
       describe(".triggerChanError") {
         it("sends an error message to socket's channels") {
-          let mockChannel = MockChannel()
           wsSocket.channels = [mockChannel]
           wsSocket.onConnError(error: "error")
           expect(mockChannel.triggerCalled).to(beTrue())
           expect(mockChannel.triggerMsg.event) == "error"
+        }
+      }
+
+      describe("`isConnected`") {
+        it("returns `connection.isConnected`") {
+          expect(wsSocket.isConnected) == wsSocket.connection.isConnected
+        }
+      }
+
+      describe(".remove") {
+        xit("removes channel from `channels`") {
+          
+        }
+      }
+
+      describe(".channel") {
+        it("creates a new channel with params") {
+          let testChan = wsSocket.channel(topic: "chan:test1", chanParams: ["c": "p"])
+          expect(testChan.topic) == "chan:test1"
+          expect(testChan.params["c"] as? String) == "p"
+          expect(testChan.socket.endPointURL) == wsSocket.endPointURL
+        }
+
+        it("adds channel to `channels`") {
+          let testChan = wsSocket.channel(topic: "chan:test2", chanParams: ["c": "p"])
+          expect(wsSocket.channels.first!.topic) == testChan.topic
+        }
+      }
+
+      describe(".push") {
+        var theKind = ""
+        var theMsg = ""
+        var theData: Dictionary <String, Any> = [:]
+        let testMsg = Message(
+          topic: "room:lobby", event: "pushTest", payload: ["a": "b"], ref: "r", joinRef: "jr"
+        )
+        let mockSerializer = MockSerializer()
+        let socketOptions = SocketOptions(
+          logger: { (_ kind, _ msg, _ data) in
+            theKind = kind
+            theMsg = msg
+            theData = data as! Dictionary <String, Any>
+          },
+          serializer: mockSerializer
+        )
+        let connectedSocket = MockConnectedSocket(endPoint: wsEndPoint, opts: socketOptions)
+        let unconnectedSocket = Socket(endPoint: wsEndPoint, opts: socketOptions)
+
+        beforeEach {
+          theKind = ""
+          theMsg = ""
+          theData = [:]
+        }
+
+        it("logs a push message") {
+          connectedSocket.push(msg: testMsg)
+          expect(theKind) == "push"
+          expect(theMsg) == "room:lobby pushTest (jr, r)"
+          expect(theData["a"] as? String) == "b"
+        }
+
+        context("when socket is connected") {
+          it("triggers the callback immediately") {
+            connectedSocket.push(msg: testMsg)
+            expect(mockSerializer.encodeCalled).to(beTrue())
+          }
+        }
+
+        context("when socket is not connected") {
+          it("appends callback to `sendBuffer`") {
+            precondition(unconnectedSocket.sendBuffer.count == 0)
+            unconnectedSocket.push(msg: testMsg)
+            expect(unconnectedSocket.sendBuffer.count) == 1
+          }
         }
       }
 
