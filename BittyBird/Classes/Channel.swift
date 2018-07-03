@@ -85,4 +85,8 @@ open class Channel {
 //      .filter( { return $0.event == message.event } )
 //      .forEach( { $0.callback(handledMessage) } )
   }
+
+  open func isMember(msg: Message) -> Bool {
+    return true
+  }
 }

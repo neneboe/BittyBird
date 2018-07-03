@@ -35,12 +35,22 @@ class MockChannel: Channel {
     triggerCalled = true
     triggerMsg = msg
   }
+
+  override func isMember(msg: Message) -> Bool {
+    return true
+  }
 }
 
 class MockSerializer: Serializer {
   var encodeCalled = false
   override func encode(msg: Message, callback: ((Data) -> Void)) {
     encodeCalled = true
+  }
+
+  var decodeCalled = false
+  override func decode(rawPayload: Data, callback: ((Message) -> Void)) {
+    decodeCalled = true
+    super.decode(rawPayload: rawPayload, callback: callback)
   }
 }
 
@@ -53,6 +63,9 @@ class SocketSpec: QuickSpec {
     describe("A Socket") {
       let wsEndPoint = "ws://localhost:4000/socket/websocket"
       let wssEndPoint = "wss://localhost:4000/socket/websocket"
+      let testMsg = Message(
+        topic: "room:lobby", event: "pushTest", payload: ["a": "b"], ref: "r", joinRef: "jr"
+      )
 
       // ********************************************************** //
       /// These are all reset in the beforeEach block
@@ -392,10 +405,6 @@ class SocketSpec: QuickSpec {
       }
 
       describe(".push") {
-        let testMsg = Message(
-          topic: "room:lobby", event: "pushTest", payload: ["a": "b"], ref: "r", joinRef: "jr"
-        )
-
         it("logs a push message") {
           mockConnectedSocket.push(msg: testMsg)
           expect(logKind) == "push"
@@ -494,6 +503,65 @@ class SocketSpec: QuickSpec {
           mockConnectedSocket.sendBuffer = [callback1, callback2]
           mockConnectedSocket.flushSendBuffer()
           expect(mockConnectedSocket.sendBuffer.count) == 0
+        }
+      }
+
+      describe(".onConnMessage") {
+        var data = Data()
+
+        beforeEach {
+          data = Data()
+          try! data.pack(
+            [
+              "topic": testMsg.topic,
+              "event": testMsg.event,
+              "payload": testMsg.payload,
+              "ref": testMsg.ref,
+              "joinRef": testMsg.joinRef as Any
+            ]
+          )
+        }
+        it("decodes the message") {
+          mockConnectedSocket.onConnMessage(rawMessage: data)
+          expect(mockSerializer.decodeCalled).to(beTrue())
+        }
+
+        it("logs a received message") {
+          mockConnectedSocket.onConnMessage(rawMessage: data)
+          expect(logKind) == "receive"
+          expect(logMsg) == " room:lobby pushTest r"
+          var ld = logData as! Dictionary <String, Any>
+          expect(ld["a"] as? String) == testMsg.payload["a"] as? String
+        }
+
+        it("sends message to member channels") {
+          mockConnectedSocket.channels = [mockChannel]
+          mockConnectedSocket.onConnMessage(rawMessage: data)
+          expect(mockChannel.triggerCalled).to(beTrue())
+        }
+
+        it("triggers callbacks in `stateChangeCallbacks.message`") {
+          mockConnectedSocket.stateChangeCallbacks.message = [callback1, callback2]
+          mockConnectedSocket.onConnMessage(rawMessage: data)
+          expect(callback1Triggered).to(beTrue())
+          expect(callback2Triggered).to(beTrue())
+        }
+
+        context("when message is reply to heartbeat") {
+          beforeEach {
+            mockConnectedSocket.pendingHeartbeatRef = testMsg.ref
+          }
+
+          it("logs pending heartbeat received") {
+            mockConnectedSocket.onConnMessage(rawMessage: data)
+            expect(logKind) == "transport"
+            expect(logMsg) == "Received pending heartbeat"
+          }
+
+          it("resets `pendingHeartbeatRef`") {
+            mockConnectedSocket.onConnMessage(rawMessage: data)
+            expect(mockConnectedSocket.pendingHeartbeatRef).to(beNil())
+          }
         }
       }
     }

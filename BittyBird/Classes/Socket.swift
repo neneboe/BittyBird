@@ -208,7 +208,8 @@ open class Socket {
    - Parameter channel: The channel to remove from the socket
    */
   open func remove(channel: Channel) {
-//    channels = channels.filter({ $0.joinRef != channel.joinRef })
+    // TODO
+    // channels = channels.filter({ $0.joinRef != channel.joinRef })
   }
 
   /**
@@ -279,12 +280,28 @@ open class Socket {
     sendBuffer = []
   }
 
-  open func onConnMessage(data: Data) {
+  /// Called when connection receives a data message
+  open func onConnMessage(rawMessage: Data) {
+    serializer.decode(rawPayload: rawMessage) { (msg) in
+      log(
+        kind: "receive",
+        msg: "\(msg.payload["status"] ?? "") \(msg.topic) \(msg.event) \(msg.ref)",
+        data: msg.payload
+      )
+      channels.filter({ $0.isMember(msg: msg) }).forEach({ $0.trigger(msg: msg) })
+      stateChangeCallbacks.message.forEach({ $0() })
 
+      if msg.ref == pendingHeartbeatRef {
+        log(kind: "transport", msg: "Received pending heartbeat")
+        pendingHeartbeatRef = nil
+      }
+    }
   }
 
+  /// This should't get called if you're using MessagePack, but if you
+  /// swap in a json serialzer it will.
   open func onConnMessage(rawMessage: String) {
-
+    // no-op
   }
 
 
@@ -323,6 +340,6 @@ extension Socket: WebSocketDelegate {
   }
 
   open func websocketDidReceiveData(socket: WebSocketClient, data: Data) {
-    onConnMessage(data: data)
+    onConnMessage(rawMessage: data)
   }
 }
