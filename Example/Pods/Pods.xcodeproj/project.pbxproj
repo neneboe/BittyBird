@@ -7,10 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		012739A620E84A560096AD80 /* PhxMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 012739A420E84A560096AD80 /* PhxMessage.swift */; };
-		012739A720E84A560096AD80 /* PhxMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 012739A420E84A560096AD80 /* PhxMessage.swift */; };
-		012739A820E84A560096AD80 /* CanSerialize.swift in Sources */ = {isa = PBXBuildFile; fileRef = 012739A520E84A560096AD80 /* CanSerialize.swift */; };
-		012739A920E84A560096AD80 /* CanSerialize.swift in Sources */ = {isa = PBXBuildFile; fileRef = 012739A520E84A560096AD80 /* CanSerialize.swift */; };
 		015A295120EB0CD300F00F67 /* Push.swift in Sources */ = {isa = PBXBuildFile; fileRef = 015A295020EB0CD300F00F67 /* Push.swift */; };
 		0777D3B7CE66BEDB6169679B1111A65C /* Quick-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = EA236ADF6F943450EE9C48FADE777499 /* Quick-dummy.m */; };
 		09DDBAF82F25DDF19B75A06FAA8A94C4 /* Callsite.swift in Sources */ = {isa = PBXBuildFile; fileRef = 642262BF8E1A3BA8955CEBDC34D502B0 /* Callsite.swift */; };
@@ -201,8 +197,6 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		012739A420E84A560096AD80 /* PhxMessage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PhxMessage.swift; path = ../../BittyBird/Classes/PhxMessage.swift; sourceTree = "<group>"; };
-		012739A520E84A560096AD80 /* CanSerialize.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = CanSerialize.swift; path = ../../BittyBird/Classes/CanSerialize.swift; sourceTree = "<group>"; };
 		015A295020EB0CD300F00F67 /* Push.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Push.swift; sourceTree = "<group>"; };
 		020FB62DDB830EDE26C375760F78979F /* SourceLocation.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = SourceLocation.swift; path = Sources/Nimble/Utils/SourceLocation.swift; sourceTree = "<group>"; };
 		02A8D41A4E050C74298C51A52740E5F0 /* Quick.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Quick.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -428,16 +422,6 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		012739A320E8498D0096AD80 /* Protocols */ = {
-			isa = PBXGroup;
-			children = (
-				012739A520E84A560096AD80 /* CanSerialize.swift */,
-				012739A420E84A560096AD80 /* PhxMessage.swift */,
-			);
-			name = Protocols;
-			path = BittyBird/Classes;
-			sourceTree = "<group>";
-		};
 		0F5BD2FF2DCB33B971798B8C1F0BF603 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
@@ -724,7 +708,6 @@
 				B005DBCA55F81C07E1981F8958C426A7 /* Socket.swift */,
 				945137E6216206CFF602C42FF2F84A5C /* SocketOptions.swift */,
 				A3DA7E7122EEFB3D7E75FBDD3C231F4F /* Pod */,
-				012739A320E8498D0096AD80 /* Protocols */,
 				3C090AC23AA0092DE273781F6C3776EC /* Support Files */,
 			);
 			name = BittyBird;
@@ -1096,8 +1079,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				012739A920E84A560096AD80 /* CanSerialize.swift in Sources */,
-				012739A720E84A560096AD80 /* PhxMessage.swift in Sources */,
 				3C60E84E648428AEEACCDDB5C6DDDA78 /* Pods-BittyBird_Tests-dummy.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1106,11 +1087,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				012739A620E84A560096AD80 /* PhxMessage.swift in Sources */,
 				015A295120EB0CD300F00F67 /* Push.swift in Sources */,
 				CA47C8A2E2F7FD9AC35844E8D6723A10 /* BBTimer.swift in Sources */,
 				63DE19443836F1633BDFC4BE5651F6DD /* BittyBird-dummy.m in Sources */,
-				012739A820E84A560096AD80 /* CanSerialize.swift in Sources */,
 				461A8FAFAEADE52BF0F03C6DF1EE5C91 /* Channel.swift in Sources */,
 				3B33D30D76BFBA688B5EF35171A1EE50 /* Message.swift in Sources */,
 				5EED48B2AF94399EBEE6F7D8BF139A13 /* Serializer.swift in Sources */,

@@ -8,7 +8,7 @@
 import Foundation
 
 /// The states of a channel's lifecycle
-public enum ChannelStates {
+public enum ChannelState {
   public static let closed = "closed"
   public static let errored = "errored"
   public static let joined = "joined"
@@ -17,7 +17,8 @@ public enum ChannelStates {
 }
 
 /// Server-side names of channel lifecycle events
-public enum ChannelEvents {
+public enum ChannelEvent {
+  public static let heartbeat = "heartbeat"
   public static let close = "phx_close"
   public static let error = "phx_error"
   public static let join = "phx_join"
@@ -28,10 +29,10 @@ public enum ChannelEvents {
 open class Channel {
   /// Server-side names of channel lifecycle events
   let CHANNEL_LIFECYCLE_EVENTS: Array <String> = [
-    ChannelEvents.close, ChannelEvents.error, ChannelEvents.join, ChannelEvents.reply, ChannelEvents.leave
+    ChannelEvent.close, ChannelEvent.error, ChannelEvent.join, ChannelEvent.reply, ChannelEvent.leave
   ]
   /// Current state of the Channel
-  var state: String = ChannelStates.closed
+  var state: String = ChannelState.closed
   /// The topic of the Channel. e.g. "room: lobby"
   let topic: String
   /// The params sent when joining the channel

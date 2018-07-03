@@ -8,7 +8,7 @@
 import Foundation
 
 /// Encapsulates message properties in format to match Phoenix messages
-public struct Message: PhxMessage {
+public struct Message {
   /// The name of the room or channel
   public var topic: String
   /// The name of the event

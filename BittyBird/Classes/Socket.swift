@@ -57,11 +57,11 @@ open class Socket {
   /// Instance of Timer that sends out a heartbeat message on trigger
   public var heartbeatTimer: Timer? = nil
   /// Ref counter for the last heartbeat that was sent
-  private var pendingHeartbeatRef: String? = nil
+  open var pendingHeartbeatRef: String? = nil
   /// Timer to use when attempting to reconnect
   public var reconnectTimer: BBTimer!
   /// Ref counter for each Message instance passed through the socket
-  private var ref = 0
+  open var ref: UInt64 = UInt64.min // 0
   /// Buffer for callbacks that will send messages once the socket has connected
   public var sendBuffer: Array <() -> Void> = []
   /// Disable sending heartbeats by setting this to true.
@@ -244,19 +244,49 @@ open class Socket {
     else { self.sendBuffer.append(callback) }
   }
 
-  open func onConnMessage(_ rawMessage: String) {
-
+  /**
+   Get next message ref, accounting for overflows
+   - Returns: The next message ref as String
+   */
+  open func makeRef() -> String {
+    let newRef = ref + 1
+    ref = (newRef == UInt64.max) ? 0 : newRef
+    return String(newRef)
   }
 
+  /**
+   Attempts to reconnect if there's an old `pendingHeartbeatRef`, otherwise
+   pushes a heartbeat message to server
+   */
   @objc func sendHeartbeat() {
-    print("heartbeat")
+    guard isConnected else { return }
+    if pendingHeartbeatRef == nil {
+      pendingHeartbeatRef = makeRef()
+      push(msg: Message(
+        topic: "phoenix", event: ChannelEvent.heartbeat, ref: pendingHeartbeatRef!
+      ))
+    } else {
+      pendingHeartbeatRef = nil
+      log(kind: "transport", msg: "Heartbeat timeout. Attempting to re-establish connection...")
+      connection.disconnect()
+    }
   }
 
+  /// Triggers and clears any callbacks stored in the `sendBuffer`
   open func flushSendBuffer() {
     guard isConnected && sendBuffer.count > 0 else { return }
     sendBuffer.forEach({ $0() })
     sendBuffer = []
   }
+
+  open func onConnMessage(data: Data) {
+
+  }
+
+  open func onConnMessage(rawMessage: String) {
+
+  }
+
 
   /**
    Formats a url with params
@@ -277,22 +307,22 @@ open class Socket {
 
 extension Socket: WebSocketDelegate {
   open func websocketDidConnect(socket: WebSocketClient) {
-    self.onConnOpen()
+    onConnOpen()
   }
 
   open func websocketDidDisconnect(socket: WebSocketClient, error: Error?) {
-    guard let error = error else {
-      self.onConnClose()
-      return }
-
-    self.onConnError(error: error)
+    if error != nil {
+      onConnError(error: error)
+    } else {
+      onConnClose()
+    }
   }
 
   open func websocketDidReceiveMessage(socket: WebSocketClient, text: String) {
-    self.onConnMessage(text)
+    onConnMessage(rawMessage: text)
   }
 
   open func websocketDidReceiveData(socket: WebSocketClient, data: Data) {
-    /* no-op */
+    onConnMessage(data: data)
   }
 }

@@ -53,20 +53,48 @@ class SocketSpec: QuickSpec {
     describe("A Socket") {
       let wsEndPoint = "ws://localhost:4000/socket/websocket"
       let wssEndPoint = "wss://localhost:4000/socket/websocket"
+
+      // ********************************************************** //
+      /// These are all reset in the beforeEach block
+      var callback1Triggered = false
+      var callback2Triggered = false
+      var logKind = ""
+      var logMsg = ""
+      var logData = "" as Any
       var wsSocket = Socket(endPoint: wsEndPoint)
       var wssSocket = Socket(endPoint: wssEndPoint)
+      var mockChannel = MockChannel(topic: "topic", params: ["k": "v"], socket: wsSocket)
       var mockConnection = MockConnection(url: URL(string: wsEndPoint)!)
       var mockSocket = Socket(connection: mockConnection)
+      var mockSerializer = MockSerializer()
+      var mockConnectedSocketOptions = SocketOptions()
       var mockConnectedSocket = MockConnectedSocket(connection: mockConnection)
       var testTimer: Timer?
-      var mockChannel = MockChannel(topic: "test:room", params: ["k": "v"], socket: wsSocket)
+      // ********************************************************** //
+
+      let callback1 = { () -> Void in callback1Triggered = true }
+      let callback2 = { () -> Void in callback2Triggered = true }
 
       beforeEach {
+        callback1Triggered = false
+        callback2Triggered = false
+        logKind = ""
+        logMsg = ""
+        logData = "" as Any
         wsSocket = Socket(endPoint: wsEndPoint)
         wssSocket = Socket(endPoint: wssEndPoint)
         mockConnection = MockConnection(url: URL(string: wsEndPoint)!)
         mockSocket = Socket(connection: mockConnection)
-        mockConnectedSocket = MockConnectedSocket(connection: mockConnection)
+        mockSerializer = MockSerializer()
+        mockConnectedSocketOptions = SocketOptions(
+          logger: { (_ kind, _ msg, _ data) in
+            logKind = kind
+            logMsg = msg
+            logData = data
+        },
+          serializer: mockSerializer
+        )
+        mockConnectedSocket = MockConnectedSocket(connection: mockConnection, opts: mockConnectedSocketOptions)
         mockChannel = MockChannel(topic: "test:room", params: ["k": "v"], socket: wsSocket)
         testTimer = Timer.scheduledTimer(
           timeInterval: 5,
@@ -179,11 +207,8 @@ class SocketSpec: QuickSpec {
 
       describe(".log") {
         it("triggers the `logger` property") {
-          var loggerHasRun = false
-          let socketOptions = SocketOptions(logger: { (_ kind, _ msg, _ data) in loggerHasRun = true })
-          let configuredSocket = Socket(endPoint: wsEndPoint, opts: socketOptions)
-          configuredSocket.log(kind: "kind", msg: "msg", data: "data")
-          expect(loggerHasRun).to(beTrue())
+          mockConnectedSocket.log(kind: "kind", msg: "msg", data: "data")
+          expect(logKind) == "kind"
         }
       }
 
@@ -222,16 +247,9 @@ class SocketSpec: QuickSpec {
 
       describe(".onConnOpen") {
         it("logs an open message") {
-          var theKind = ""
-          var theMsg = ""
-          let socketOptions = SocketOptions(logger: { (_ kind, _ msg, _ data) in
-            theKind = kind
-            theMsg = msg
-          })
-          let configuredSocket = Socket(endPoint: wsEndPoint, opts: socketOptions)
-          configuredSocket.onConnOpen()
-          expect(theKind) == "transport"
-          expect(theMsg) == "Connected to \(configuredSocket.connection.currentURL)"
+          mockConnectedSocket.onConnOpen()
+          expect(logKind) == "transport"
+          expect(logMsg) == "Connected to \(mockConnectedSocket.connection.currentURL)"
         }
 
         it("flushes the send buffer") {
@@ -276,10 +294,6 @@ class SocketSpec: QuickSpec {
         }
 
         it("triggers each callback in `stateChangeCallbacks.open`") {
-          var callback1Triggered = false
-          var callback2Triggered = false
-          let callback1 = { () -> Void in callback1Triggered = true }
-          let callback2 = { () -> Void in callback2Triggered = true }
           wsSocket.stateChangeCallbacks.open = [callback1, callback2]
           wsSocket.onConnOpen()
           expect(callback1Triggered).to(beTrue())
@@ -289,16 +303,9 @@ class SocketSpec: QuickSpec {
 
       describe(".onConnClose") {
         it("logs a close message") {
-          var theKind = ""
-          var theMsg = ""
-          let socketOptions = SocketOptions(logger: { (_ kind, _ msg, _ data) in
-            theKind = kind
-            theMsg = msg
-          })
-          let configuredSocket = Socket(endPoint: wsEndPoint, opts: socketOptions)
-          configuredSocket.onConnClose()
-          expect(theKind) == "transport"
-          expect(theMsg) == "close"
+          mockConnectedSocket.onConnClose()
+          expect(logKind) == "transport"
+          expect(logMsg) == "close"
         }
 
         it("triggers errors in socket channels") {
@@ -320,10 +327,6 @@ class SocketSpec: QuickSpec {
         }
 
         it("triggers each callback in `stateChangeCallbacks.close`") {
-          var callback1Triggered = false
-          var callback2Triggered = false
-          let callback1 = { () -> Void in callback1Triggered = true }
-          let callback2 = { () -> Void in callback2Triggered = true }
           wsSocket.stateChangeCallbacks.close = [callback1, callback2]
           wsSocket.onConnClose()
           expect(callback1Triggered).to(beTrue())
@@ -333,19 +336,10 @@ class SocketSpec: QuickSpec {
 
       describe(".onConnError") {
         it("logs an error message") {
-          var theKind = ""
-          var theMsg = ""
-          var theData = ""
-          let socketOptions = SocketOptions(logger: { (_ kind, _ msg, _ data) in
-            theKind = kind
-            theMsg = msg
-            theData = data as! String
-          })
-          let configuredSocket = Socket(endPoint: wsEndPoint, opts: socketOptions)
-          configuredSocket.onConnError(error: "the error msg")
-          expect(theKind) == "transport"
-          expect(theMsg) == "error"
-          expect(theData) == "the error msg"
+          mockConnectedSocket.onConnError(error: "the error msg")
+          expect(logKind) == "transport"
+          expect(logMsg) == "error"
+          expect(logData as? String) == "the error msg"
         }
 
         it("triggers errors in socket channels") {
@@ -355,10 +349,6 @@ class SocketSpec: QuickSpec {
         }
 
         it("triggers each callback in `stateChangeCallbacks.error`") {
-          var callback1Triggered = false
-          var callback2Triggered = false
-          let callback1 = { () -> Void in callback1Triggered = true }
-          let callback2 = { () -> Void in callback2Triggered = true }
           wsSocket.stateChangeCallbacks.error = [callback1, callback2]
           wsSocket.onConnError(error: "error")
           expect(callback1Triggered).to(beTrue())
@@ -402,64 +392,97 @@ class SocketSpec: QuickSpec {
       }
 
       describe(".push") {
-        var theKind = ""
-        var theMsg = ""
-        var theData: Dictionary <String, Any> = [:]
         let testMsg = Message(
           topic: "room:lobby", event: "pushTest", payload: ["a": "b"], ref: "r", joinRef: "jr"
         )
-        let mockSerializer = MockSerializer()
-        let socketOptions = SocketOptions(
-          logger: { (_ kind, _ msg, _ data) in
-            theKind = kind
-            theMsg = msg
-            theData = data as! Dictionary <String, Any>
-          },
-          serializer: mockSerializer
-        )
-        let connectedSocket = MockConnectedSocket(endPoint: wsEndPoint, opts: socketOptions)
-        let unconnectedSocket = Socket(endPoint: wsEndPoint, opts: socketOptions)
-
-        beforeEach {
-          theKind = ""
-          theMsg = ""
-          theData = [:]
-        }
 
         it("logs a push message") {
-          connectedSocket.push(msg: testMsg)
-          expect(theKind) == "push"
-          expect(theMsg) == "room:lobby pushTest (jr, r)"
-          expect(theData["a"] as? String) == "b"
+          mockConnectedSocket.push(msg: testMsg)
+          expect(logKind) == "push"
+          expect(logMsg) == "room:lobby pushTest (jr, r)"
+          var data = logData as? Dictionary <String, Any>
+          expect(data!["a"] as? String) == "b"
         }
 
         context("when socket is connected") {
           it("triggers the callback immediately") {
-            connectedSocket.push(msg: testMsg)
+            mockConnectedSocket.push(msg: testMsg)
             expect(mockSerializer.encodeCalled).to(beTrue())
           }
         }
 
         context("when socket is not connected") {
           it("appends callback to `sendBuffer`") {
-            precondition(unconnectedSocket.sendBuffer.count == 0)
-            unconnectedSocket.push(msg: testMsg)
-            expect(unconnectedSocket.sendBuffer.count) == 1
+            precondition(wsSocket.sendBuffer.count == 0)
+            wsSocket.push(msg: testMsg)
+            expect(wsSocket.sendBuffer.count) == 1
+          }
+        }
+      }
+
+      describe(".makeRef") {
+        it("returns an incrementing ref string") {
+          expect(wsSocket.makeRef()) == "1"
+          expect(wsSocket.makeRef()) == "2"
+        }
+
+        it("returns '0' if ref overflows") {
+          wsSocket.ref = UInt64.max - 1
+          expect(wsSocket.makeRef()) == "\(UInt64.max)"
+          expect(wsSocket.makeRef()) == "1"
+        }
+      }
+
+      describe(".sendHeartbeat") {
+        context("when socket is not connected") {
+          it("does nothing") {
+            precondition(wsSocket.isConnected == false)
+            wsSocket.pendingHeartbeatRef = "someRef"
+            wsSocket.sendHeartbeat() // would reset `pendingHeartbeatRef` to nil if connected
+            expect(wsSocket.pendingHeartbeatRef) == "someRef"
+          }
+        }
+
+        context("when socket is connected") {
+          context("when there is no `pendingHeartbeatRef`") {
+            it("sets `pendingHeartbeatRef` to new ref") {
+              precondition(mockConnectedSocket.pendingHeartbeatRef == nil)
+              mockConnectedSocket.sendHeartbeat()
+              expect(mockConnectedSocket.pendingHeartbeatRef).toNot(beNil())
+            }
+
+            it("pushes a heartbeat message to server") {
+              precondition(mockSerializer.encodeCalled == false)
+              mockConnectedSocket.sendHeartbeat()
+              expect(mockSerializer.encodeCalled).to(beTrue())
+            }
+          }
+          context("when there is a `pendingHeartbeatRef`") {
+            beforeEach {
+              mockConnectedSocket.pendingHeartbeatRef = "pendingRef"
+            }
+
+            it("resets `pendingHeartbeatRef`") {
+              mockConnectedSocket.sendHeartbeat()
+              expect(mockConnectedSocket.pendingHeartbeatRef).to(beNil())
+            }
+
+            it("logs a heartbeat timeout message") {
+              mockConnectedSocket.sendHeartbeat()
+              expect(logKind) == "transport"
+              expect(logMsg) == "Heartbeat timeout. Attempting to re-establish connection..."
+            }
+
+            it("calls `disconnect` on socket") {
+              precondition(mockConnection.disconnectCalled == false)
+              mockConnectedSocket.sendHeartbeat()
+              expect(mockConnection.disconnectCalled).to(beTrue())
+            }
           }
         }
       }
 
       describe(".flushSendBuffer") {
-        var callback1Triggered = false
-        var callback2Triggered = false
-        let callback1 = { () -> Void in callback1Triggered = true }
-        let callback2 = { () -> Void in callback2Triggered = true }
-
-        beforeEach {
-          callback1Triggered = false
-          callback2Triggered = false
-        }
-        
         it("triggers each callback in `sendBuffer`") {
           mockConnectedSocket.sendBuffer = [callback1, callback2]
           mockConnectedSocket.flushSendBuffer()

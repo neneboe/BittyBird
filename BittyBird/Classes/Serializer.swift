@@ -9,7 +9,7 @@ import Foundation
 import SwiftMsgPack
 
 /// Encodes and decodes messages using MessagePack
-open class Serializer: CanSerialize {
+open class Serializer {
   // typealiases to make Serializer conform to CanSerialize
   public typealias T = Message
   public typealias U = Data
