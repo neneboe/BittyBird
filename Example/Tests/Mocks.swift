@@ -19,19 +19,23 @@ class MockConnection: WebSocket {
 }
 
 class MockConnectedSocket: Socket {
-  override var isConnected: Bool {
-    get {
-      return true
-    }
+  override var isConnected: Bool { get { return true }}
+
+  var pushCalled = false
+  override func push(msg: Message) {
+    pushCalled = true
+    super.push(msg: msg)
   }
 }
 
 class MockChannel: Channel {
-  var triggerCalled = false
+  var triggerTimesCalled = 0
   var triggerMsg = Message()
+  var triggerCalled: Bool { get { return triggerTimesCalled > 0 }}
   override func trigger(msg: Message) {
-    triggerCalled = true
+    triggerTimesCalled += 1
     triggerMsg = msg
+    super.trigger(msg: msg)
   }
 
   override func isMember(msg: Message) -> Bool {
@@ -42,6 +46,36 @@ class MockChannel: Channel {
   override func rejoin(timeout: Int? = nil) {
     rejoinCalled = true
     super.rejoin(timeout: timeout)
+  }
+}
+
+class MockPush: Push {
+  var startTimeoutCalled = false
+  override func startTimeout() {
+    startTimeoutCalled = true
+  }
+
+  var sendCalled = false
+  override func send() {
+    sendCalled = true
+  }
+
+  var receivedStatuses: Array <String> = []
+  override func receive(status: String, callback: ((Message) -> Void)) -> Push {
+    let testMsg = Message(
+      topic: "mock:push", event: "receive", payload: ["status": status], ref: "r", joinRef: "jr"
+    )
+    receivedStatuses.append(status)
+    callback(testMsg)
+    return self
+  }
+
+  var triggerCalled = false
+  var triggerStatus = ""
+  override func trigger(status: String, payload: Dictionary<String, Any>) {
+    triggerCalled = true
+    triggerStatus = status
+    super.trigger(status: status, payload: payload)
   }
 }
 

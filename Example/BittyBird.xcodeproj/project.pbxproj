@@ -89,11 +89,11 @@
 				01E0A0A920E45A6D00ABDDB2 /* BBTimerTests.swift */,
 				015D34C520EC4EAE00ADB078 /* ChannelTests.swift */,
 				013C03CF20E5CA4C00ED0716 /* MessageTests.swift */,
+				01F34D3F20ED5290006FBB47 /* Mocks.swift */,
 				013C03CA20E5860B00ED0716 /* SerializerTests.swift */,
 				013C03D120E6982500ED0716 /* SocketTests.swift */,
 				607FACEB1AFB9204008FA782 /* Tests.swift */,
 				607FACE91AFB9204008FA782 /* Supporting Files */,
-				01F34D3F20ED5290006FBB47 /* Mocks.swift */,
 			);
 			path = Tests;
 			sourceTree = "<group>";

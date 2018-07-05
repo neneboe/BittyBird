@@ -25,10 +25,11 @@ class ChannelSpec: QuickSpec {
         unconnectedChannel = MockChannel(topic: "test:channel", socket: unconnectedSocket)
         mockConnection = MockConnection(url: URL(string: endPoint)!)
         mockConnectedSocket = MockConnectedSocket(connection: mockConnection)
-        mockChannel = MockChannel(topic: "test:topic", socket: mockConnectedSocket)
+        mockChannel = MockChannel(topic: "test:topic", socket: mockConnectedSocket, pushClass: MockPush.self)
       }
 
       it("initializes") {
+        // TODO add more expectations, maybe another context
         expect(unconnectedChannel.topic) == "test:channel"
       }
 
@@ -126,6 +127,78 @@ class ChannelSpec: QuickSpec {
 
         context("when `isJoined` is false") {
           expect(mockChannel.canPush).to(beFalse())
+        }
+      }
+
+      describe(".push") {
+        context("when channel `canPush`") {
+          it("creates an instance of Push and sends it") {
+            mockChannel.state = ChannelState.joined
+            let testPush = mockChannel.push(event: "testPush", payload: ["k": "v"]) as! MockPush
+            expect(testPush.sendCalled).to(beTrue())
+          }
+        }
+
+        context("when channel can't push") {
+          it("calls scheduleTimeout on the new Push instance") {
+            let testPush = mockChannel.push(event: "testPush", payload: ["k": "v"]) as! MockPush
+            expect(testPush.startTimeoutCalled).to(beTrue())
+          }
+          it("adds new Push instance to the `pushBuffer`") {
+            let testPush = mockChannel.push(event: "testPush", payload: ["k": "v"])
+            expect(mockConnectedSocket.pushCalled).to(beFalse())
+            expect(mockChannel.pushBuffer.first) === testPush
+          }
+        }
+      }
+
+      describe(".leave") {
+        it("changes `state` to leaving") {
+          mockChannel.leave()
+          expect(mockChannel.state) == ChannelState.leaving
+        }
+
+        context("when the created push gets a response, the onClose callback") {
+          it("logs a leave message") {
+            var kindsReceived: Array<String> = []
+            var msgsReceived: Array<String> = []
+            let testOptions = SocketOptions(logger: { (kind, msg, data) in
+              print("appending \(kind) to thing")
+              kindsReceived.append(kind)
+              msgsReceived.append(msg)
+            })
+            let configuredSocket = Socket(endPoint: endPoint, opts: testOptions)
+            let configuredChannel = MockChannel(
+              topic: "test:topic", socket: configuredSocket, pushClass: MockPush.self
+            )
+            configuredChannel.leave() // calls MockPush.receive which triggers all callbacks
+            expect(kindsReceived) == ["channel", "channel"] // once each for on "ok" and "timeout"
+            expect(msgsReceived) == ["leave test:topic", "leave test:topic"]
+          }
+
+          it("calls `trigger` with message") {
+            mockChannel.leave() // calls MockPush.receive which triggers all callbacks
+            expect(mockChannel.triggerTimesCalled) == 2 // once each for on "ok" and "timeout"
+          }
+        }
+
+        it("creates a new push and adds two `.receive` hooks to it") {
+          let testPush = mockChannel.leave() as! MockPush
+          expect(testPush.receivedStatuses) == ["ok", "timeout"]
+        }
+
+        it("sends the created push") {
+          let testPush = mockChannel.leave() as! MockPush
+          expect(testPush.sendCalled).to(beTrue())
+        }
+
+        context("when channel can't push") {
+          it("calls trigger on the created push") {
+            precondition(mockChannel.canPush == false)
+            let testPush = mockChannel.leave() as! MockPush
+            expect(testPush.triggerCalled).to(beTrue())
+            expect(testPush.triggerStatus) == "ok"
+          }
         }
       }
     }

@@ -7,6 +7,7 @@
 
 import SwiftMsgPack
 
+// TODO: Make this a singleton
 /// Encodes and decodes messages using MessagePack
 open class Serializer {
   public init() {}

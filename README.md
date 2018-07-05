@@ -34,10 +34,11 @@ To run the tests, clone the repo, run `pod install` from the Example directory, 
   * `skipHeartbeat` is a property of `Socket` instead of `Socket.connection`
   * No `Socket.connectionState` method. Starscream doesn't yet support this.
   * `Socket.push` takes an instance of `Message` as a param instead of a generic data object
+  * `Channel.init` takes an optional `pushClass` param, which defaults to `Push.self`. Used for testing here, but you could swap in any Push subclass implementation using this param. Will probably remove this param in future version if Swift ever adapts default vaules for generics.
 
 #### Author
 
-Nick Eneboe - Shout out to SwiftPhoenixClient though. This repo is very nearly a fork of SwiftPhoenixClient, but I wanted to write it from scratch for my own practice.
+Nick Eneboe - Shout out to SwiftPhoenixClient though. This repo borrows a lot from SwiftPhoenixClient, but I wanted to write it from scratch for my own practice.
 
 #### License
 

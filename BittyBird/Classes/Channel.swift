@@ -49,21 +49,30 @@ open class Channel {
   var pushBuffer: Array <Push> = []
   /// Timer to attempt to rejoin
   var rejoinTimer: BBTimer?
+  /// The type of Push to use for creating new pushes
+  let pushClass: Push.Type
 
   /**
    Creates a new instance of Channel
 
    - Parameter topic: Name of the channel to join
-   - Parameter params: Params to pass along to server on join request
-   - Parameter socket: The socket to use for transport
+   - Parameter params: Optional params to pass along to server on join request
+   - Parameter socket: Socket to use for transport
+   - Parameter pushClass: Optional type of Push to use for creating new pushes
    - Returns: A new instance of channel
    */
-  init(topic: String, params: Dictionary <String, Any> = [:], socket: Socket) {
+  init(
+    topic: String,
+    params: Dictionary <String, Any> = [:],
+    socket: Socket,
+    pushClass: Push.Type = Push.self
+  ) {
     self.topic = topic
     self.params = params
     self.socket = socket
     self.timeout = socket.timeout
-    self.joinPush = Push(
+    self.pushClass = pushClass
+    self.joinPush = pushClass.init(
       channel: self, event: ChannelEvent.join, payload: self.params, timeout: self.timeout
     )
     self.rejoinTimer = BBTimer(callback: {
@@ -136,15 +145,40 @@ open class Channel {
     guard !joinedOnce else {
       fatalError("tried to push \(event) to \(topic) before joining. Use channel.join() before pushing events.")
     }
-    let pushEvent = Push(channel: self, event: event, payload: payload, timeout: timeout ?? socket.timeout)
-
+    let pushEvent = pushClass.init(channel: self, event: event, payload: payload, timeout: timeout ?? self.timeout)
     if canPush { pushEvent.send() }
     else {
       pushEvent.startTimeout()
       pushBuffer.append(pushEvent)
     }
-
     return pushEvent
+  }
+
+  /**
+   Leaves the channel, unsubscibres from server events, and instructs
+   channel to terminate on server.
+   To receive leave acknowledgements, use the a receive hook to bind to the
+   server ack.
+   Example:
+       channel.leave().receive("ok") { _ in { print("left") }
+   - Parameter timeout: Optional timeout
+   - Returns: A push to which you can add `receive` hooks
+   */
+  @discardableResult
+  open func leave(timeout: Int? = nil) -> Push {
+    state = ChannelState.leaving
+    let onClose: ((Message) -> Void) = { [weak self] (msg) in
+      self?.socket.log(kind: "channel", msg: "leave \(self?.topic ?? "unknown")")
+      self?.trigger(msg: msg)
+    }
+
+    let leavePush = pushClass.init(channel: self, event: ChannelEvent.leave, timeout: timeout ?? self.timeout)
+    leavePush
+      .receive(status: "ok", callback: onClose)
+      .receive(status: "timeout", callback: onClose)
+    leavePush.send()
+    if !canPush { leavePush.trigger(status: "ok", payload: [:]) }
+    return leavePush
   }
 
   /**
@@ -182,6 +216,8 @@ open class Channel {
   open func isMember(msg: Message) -> Bool {
     return true
   }
+
+  open var joinRef: String { get { return joinPush.ref }}
 
   open var isJoined: Bool { get { return state == ChannelState.joined }}
 }
