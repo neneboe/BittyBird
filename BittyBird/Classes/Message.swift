@@ -5,8 +5,6 @@
 //  Created by Nick Eneboe on 6/28/18.
 //
 
-import Foundation
-
 /// Encapsulates message properties in format to match Phoenix messages
 public struct Message {
   /// The name of the room or channel

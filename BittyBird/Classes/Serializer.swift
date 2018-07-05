@@ -5,15 +5,10 @@
 //  Created by Nick Eneboe on 6/28/18.
 //
 
-import Foundation
 import SwiftMsgPack
 
 /// Encodes and decodes messages using MessagePack
 open class Serializer {
-  // typealiases to make Serializer conform to CanSerialize
-  public typealias T = Message
-  public typealias U = Data
-
   public init() {}
 
   /**

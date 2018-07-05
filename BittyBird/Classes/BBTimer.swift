@@ -4,7 +4,6 @@
 //
 //  Created by Nick Eneboe on 6/27/18.
 //
-import Foundation
 
 /// Creates a timer that accepts a `timerCalc` function to perform calculated timeout retries, such as exponential backoff.
 open class BBTimer {

@@ -5,7 +5,6 @@
 //  Created by Nick Eneboe on 6/29/18.
 //
 
-import Foundation
 import Starscream
 
 /// Stores callbacks to be triggered on connection events

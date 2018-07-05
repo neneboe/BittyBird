@@ -11,49 +11,6 @@ import Nimble
 import Starscream
 @testable import BittyBird
 
-class MockConnection: WebSocket {
-  var disconnectCalled = false
-  override func disconnect(forceTimeout: TimeInterval? = nil, closeCode: UInt16 = 1000) {
-    disconnectCalled = true
-  }
-  var connectCalled = false
-  override func connect() { connectCalled = true }
-}
-
-class MockConnectedSocket: Socket {
-  override var isConnected: Bool {
-    get {
-      return true
-    }
-  }
-}
-
-class MockChannel: Channel {
-  var triggerCalled = false
-  var triggerMsg = Message()
-  override func trigger(msg: Message) {
-    triggerCalled = true
-    triggerMsg = msg
-  }
-
-  override func isMember(msg: Message) -> Bool {
-    return true
-  }
-}
-
-class MockSerializer: Serializer {
-  var encodeCalled = false
-  override func encode(msg: Message, callback: ((Data) -> Void)) {
-    encodeCalled = true
-  }
-
-  var decodeCalled = false
-  override func decode(rawPayload: Data, callback: ((Message) -> Void)) {
-    decodeCalled = true
-    super.decode(rawPayload: rawPayload, callback: callback)
-  }
-}
-
 class SocketSpec: QuickSpec {
   @objc func timerStub() {
     ()
@@ -385,6 +342,7 @@ class SocketSpec: QuickSpec {
       }
 
       describe(".remove") {
+        // TODO
         xit("removes channel from `channels`") {
           
         }
@@ -400,7 +358,7 @@ class SocketSpec: QuickSpec {
 
         it("adds channel to `channels`") {
           let testChan = wsSocket.channel(topic: "chan:test2", chanParams: ["c": "p"])
-          expect(wsSocket.channels.first!.topic) == testChan.topic
+          expect(wsSocket.channels.first!) === testChan
         }
       }
 

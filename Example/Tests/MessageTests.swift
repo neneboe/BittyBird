@@ -12,7 +12,7 @@ import Nimble
 
 class MessageSpec: QuickSpec {
   override func spec() {
-    describe("A MessageSpec") {
+    describe("A Message") {
       it("initializes with `topic`, `event`, `payload`, `ref`, and `joinRef` properties") {
         let message = Message(
           topic: "topic",

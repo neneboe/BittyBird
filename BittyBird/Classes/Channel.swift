@@ -5,8 +5,6 @@
 //  Created by Nick Eneboe on 6/30/18.
 //
 
-import Foundation
-
 /// The states of a channel's lifecycle
 public enum ChannelState {
   public static let closed = "closed"
@@ -39,14 +37,14 @@ open class Channel {
   var params: Dictionary <String, Any>
   /// The Socket that the channel belongs to
   let socket: Socket
-  /// Collection of event bindings
-  var bindings: [(event: String, ref: Int, callback: (Message) -> Void)] = []
+  /// Array of event bindings as named tuples
+  var bindings: [(event: String, callback: (Message) -> Void)] = []
   /// Timout when attempting to join a Channel
   var timeout: Int
   /// Set to true once the channel calls .join()
   var joinedOnce: Bool = false
   /// Push to send when the channel calls .join()
-  var joinPush: Push
+  var joinPush: Push!
   /// Buffer of Pushes that will be sent once the Channel's socket connects
   var pushBuffer: Array <Push> = []
   /// Timer to attempt to rejoin
@@ -55,22 +53,117 @@ open class Channel {
   /**
    Creates a new instance of Channel
 
-   - Parameter msg: Instance of Message
+   - Parameter topic: Name of the channel to join
+   - Parameter params: Params to pass along to server on join request
+   - Parameter socket: The socket to use for transport
+   - Returns: A new instance of channel
    */
-  init(topic: String, params: Dictionary <String, Any>, socket: Socket) {
+  init(topic: String, params: Dictionary <String, Any> = [:], socket: Socket) {
     self.topic = topic
     self.params = params
     self.socket = socket
     self.timeout = socket.timeout
-    self.joinPush = Push()
+    self.joinPush = Push(
+      channel: self, event: ChannelEvent.join, payload: self.params, timeout: self.timeout
+    )
     self.rejoinTimer = BBTimer(callback: {
-      self.rejoinTimer?.scheduleTimeout()
-      if socket.isConnected { self.rejoin() }
+      () -> Void in self.rejoinUntilConnected()
     }, timerCalc: socket.reconnectAfterSeconds)
   }
 
-  open func rejoin() {
+  /// Keeps trying to rejoin channel on a repeating exponential backoff timer
+  open func rejoinUntilConnected() {
+    rejoinTimer?.scheduleTimeout()
+    if socket.isConnected {
+      rejoin()
+    }
+  }
 
+  /**
+   Joins a channel
+
+   - Parameter timeout: Optional duration to wait for a response to the join message
+   - Returns: the `joinPush`, the channel's instance of Push used to send join message
+  */
+  open func join(timeout: Int? = nil) -> Push {
+    guard !joinedOnce else {
+      fatalError("tried to join multiple times. 'join' can only be called a single time per channel instance")
+    }
+    joinedOnce = true
+    rejoin(timeout: timeout)
+    return joinPush
+  }
+
+  /// Registers callbacks to be run on the close event
+  open func onClose(callback: @escaping ((Message) -> Void)) {
+    on(event: ChannelEvent.close, callback: callback)
+  }
+  /// Registers callbacks to be run on the close event
+  open func onError(callback: @escaping ((Message) -> Void)) {
+    on(event: ChannelEvent.error, callback: callback)
+  }
+
+  /**
+   Adds an event binding to the `bindings` list
+
+   - Parameter event: Name of the event to listen for
+   - Parameter callback: The function to run when the event occurs
+   */
+  open func on(event: String, callback: @escaping ((Message) -> Void)) {
+    self.bindings.append((event: event, callback: callback))
+  }
+
+  /**
+   Removes event binding from `bindings` list
+
+   - Parameter: event: Name the the event to remove
+   */
+  open func off(event: String) {
+    bindings = bindings.filter({ !($0.event == event) })
+  }
+
+  /// Whether channel is joined and socket is connected
+  open var canPush: Bool { get { return socket.isConnected && isJoined }}
+
+  /**
+   Push the event with payload to the channel
+
+   - Parameter event: Name of the event
+   - Parameter payload: The event data
+   - Parameter timeout: Optional duration to wait for a response to the push
+   */
+  open func push(event: String, payload: Dictionary <String, Any>, timeout: Int? = nil) -> Push {
+    guard !joinedOnce else {
+      fatalError("tried to push \(event) to \(topic) before joining. Use channel.join() before pushing events.")
+    }
+    let pushEvent = Push(channel: self, event: event, payload: payload, timeout: timeout ?? socket.timeout)
+
+    if canPush { pushEvent.send() }
+    else {
+      pushEvent.startTimeout()
+      pushBuffer.append(pushEvent)
+    }
+
+    return pushEvent
+  }
+
+  /**
+   Pushes join channel message to server
+
+   - Parameter timeout: Duration to wait for a response to join message
+   */
+  open func sendJoin(timeout: Int) {
+    self.state = ChannelState.joining
+    self.joinPush.resend(timeout: timeout)
+  }
+
+  /**
+   Rejoins the channel
+
+   - Parameter timeout: Optional duration to wait for a response to the join message
+   */
+  open func rejoin(timeout: Int? = nil) {
+    self.sendJoin(timeout: timeout ?? self.timeout)
   }
 
   /**
@@ -89,4 +182,6 @@ open class Channel {
   open func isMember(msg: Message) -> Bool {
     return true
   }
+
+  open var isJoined: Bool { get { return state == ChannelState.joined }}
 }

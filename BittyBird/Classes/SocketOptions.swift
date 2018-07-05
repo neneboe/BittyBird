@@ -5,8 +5,6 @@
 //  Created by Nick Eneboe on 6/29/18.
 //
 
-import Foundation
-
 /// A struct for specifying various options on Socket initialization
 public struct SocketOptions {
   public var timeout: Int?
