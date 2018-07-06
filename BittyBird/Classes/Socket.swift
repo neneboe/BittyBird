@@ -104,13 +104,11 @@ open class Socket {
 
   /// The protocol of the socket: either "wss" or "ws"
   open var socketProtocol: String {
-    get {
-      let wssRegexPattern = "^wss:.+"
-      let wssRegex = try! NSRegularExpression(pattern: wssRegexPattern, options: .caseInsensitive)
-      let location = "\(connection.currentURL)"
-      let matches = wssRegex.matches(in: location, range: NSMakeRange(0, location.utf16.count))
-      return matches.isEmpty ? "ws" : "wss"
-    }
+    let wssRegexPattern = "^wss:.+"
+    let wssRegex = try! NSRegularExpression(pattern: wssRegexPattern, options: .caseInsensitive)
+    let location = "\(connection.currentURL)"
+    let matches = wssRegex.matches(in: location, range: NSMakeRange(0, location.utf16.count))
+    return matches.isEmpty ? "ws" : "wss"
   }
 
   /// Disconnects the socket and triggers optional callback
@@ -198,7 +196,7 @@ open class Socket {
   }
 
   /// Whether the connection is connected
-  open var isConnected: Bool { get { return connection.isConnected }}
+  open var isConnected: Bool { return connection.isConnected }
 
   /**
    Removes the Channel from the socket. This does not cause the channel to
@@ -207,8 +205,7 @@ open class Socket {
    - Parameter channel: The channel to remove from the socket
    */
   open func remove(channel: Channel) {
-    // TODO
-    // channels = channels.filter({ $0.joinRef != channel.joinRef })
+    channels = channels.filter({ $0.joinRef != channel.joinRef })
   }
 
   /**
@@ -218,7 +215,7 @@ open class Socket {
    - Parameter chanParams: Params sent to server when channel tries to join
    - Returns: A new Channel instance
    */
-  open func channel(topic: String, chanParams: Dictionary <String, Any>) -> Channel {
+  open func channel(topic: String, chanParams: Dictionary <String, Any>? = nil) -> Channel {
     let chan = Channel(topic: topic, params: chanParams, socket: self)
     channels.append(chan)
     return chan

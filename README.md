@@ -9,7 +9,7 @@ BittyBird is still a work in progress. When done, the final implementation will 
 
 ## Requirements
 
-BittyBird was written using Swift 4.1.2 targeted at devices using iOS 8.0 and above. It's only dependency is [SwiftMsgPack](https://github.com/malcommac/SwiftMsgPack), which it uses for its MessagePack implementaion.
+BittyBird was written using Swift 4.1.2 targeted at devices using iOS 8.0 and above. It's dependencies are [SwiftMsgPack](https://github.com/malcommac/SwiftMsgPack), which it uses for its MessagePack implementaion, and [Starscream](https://github.com/daltoniam/Starscream), a Swift WebSocket lib.
 
 ## Installation
 BittyBird is available through [CocoaPods](https://cocoapods.org). To install
@@ -25,7 +25,7 @@ To run the tests, clone the repo, run `pod install` from the Example directory, 
 
 ## About
 
-#### API Differences from Phoenix JS Client
+#### Notable API Differences from Phoenix JS Client
 
   * `BBTimer` instead of `Timer`
   * `Socket.socketProtocol` instead of `Socket.protocol`
@@ -33,8 +33,8 @@ To run the tests, clone the repo, run `pod install` from the Example directory, 
   * `Socket.reconnectAfterSeconds` instead of `Socket.reconnectAfterMs`
   * `skipHeartbeat` is a property of `Socket` instead of `Socket.connection`
   * No `Socket.connectionState` method. Starscream doesn't yet support this.
-  * `Socket.push` takes an instance of `Message` as a param instead of a generic data object
-  * `Channel.init` takes an optional `pushClass` param, which defaults to `Push.self`. Used for testing here, but you could swap in any Push subclass implementation using this param. Will probably remove this param in future version if Swift ever adapts default vaules for generics.
+  * The Phoenix JS client passes messages around either as a generic data object with `topic`, `payload`, etc. properies, or as individual parameters, e.g. the `Channel.isMemeber` method. BittyBird replaces both these patterns by passing around an instance of a `Message` type.
+  * `Channel.init` takes an optional `pushClass` param, which defaults to `Push.self`. Used here as a way of adding dependency injection for testing, but you could swap in any Push subclass implementation using this param. I'll probably remove this param in a future version if Swift ever adapts default vaules for generics.
 
 #### Author
 

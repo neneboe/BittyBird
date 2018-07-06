@@ -26,19 +26,19 @@ class SocketSpec: QuickSpec {
 
       // ********************************************************** //
       /// These are all reset in the beforeEach block
-      var callback1Triggered = false
-      var callback2Triggered = false
-      var logKind = ""
-      var logMsg = ""
-      var logData = "" as Any
-      var wsSocket = Socket(endPoint: wsEndPoint)
-      var wssSocket = Socket(endPoint: wssEndPoint)
-      var mockChannel = MockChannel(topic: "topic", params: ["k": "v"], socket: wsSocket)
-      var mockConnection = MockConnection(url: URL(string: wsEndPoint)!)
-      var mockSocket = Socket(connection: mockConnection)
-      var mockSerializer = MockSerializer()
-      var mockConnectedSocketOptions = SocketOptions()
-      var mockConnectedSocket = MockConnectedSocket(connection: mockConnection)
+      var callback1Triggered: Bool!
+      var callback2Triggered: Bool!
+      var logKind: String!
+      var logMsg: String!
+      var logData: Any!
+      var wsSocket: Socket!
+      var wssSocket: Socket!
+      var mockChannel: MockChannel!
+      var mockConnection: MockConnection!
+      var mockSocket: Socket!
+      var mockSerializer: MockSerializer!
+      var mockConnectedSocketOptions: SocketOptions!
+      var mockConnectedSocket: MockConnectedSocket!
       var testTimer: Timer?
       // ********************************************************** //
 
@@ -342,9 +342,15 @@ class SocketSpec: QuickSpec {
       }
 
       describe(".remove") {
-        // TODO
-        xit("removes channel from `channels`") {
-          
+        it("removes channel from `channels`") {
+          let testChan1 = MockChannel(topic: "testchan:1", socket: wsSocket)
+          let testChan2 = MockChannel(topic: "testchan:2", socket: wsSocket)
+          testChan1.joinPush.ref = "testchan1joinRef"
+          testChan2.joinPush.ref = "testchan2joinRef"
+          wsSocket.channels = [testChan1, testChan2]
+          wsSocket.remove(channel: testChan1)
+          expect(wsSocket.channels.count) == 1
+          expect(wsSocket.channels.first) === testChan2
         }
       }
 

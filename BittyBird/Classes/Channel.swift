@@ -48,8 +48,8 @@ open class Channel {
   /// Buffer of Pushes that will be sent once the Channel's socket connects
   var pushBuffer: Array <Push> = []
   /// Timer to attempt to rejoin
-  var rejoinTimer: BBTimer?
-  /// The type of Push to use for creating new pushes
+  var rejoinTimer: BBTimer!
+  /// The type of Push class to use for creating new pushes
   let pushClass: Push.Type
 
   /**
@@ -63,12 +63,12 @@ open class Channel {
    */
   init(
     topic: String,
-    params: Dictionary <String, Any> = [:],
+    params: Dictionary <String, Any>? = [:],
     socket: Socket,
     pushClass: Push.Type = Push.self
   ) {
     self.topic = topic
-    self.params = params
+    self.params = params ?? [:]
     self.socket = socket
     self.timeout = socket.timeout
     self.pushClass = pushClass
@@ -78,11 +78,13 @@ open class Channel {
     self.rejoinTimer = BBTimer(callback: {
       () -> Void in self.rejoinUntilConnected()
     }, timerCalc: socket.reconnectAfterSeconds)
+
+    addInitialBindings()
   }
 
   /// Keeps trying to rejoin channel on a repeating exponential backoff timer
   open func rejoinUntilConnected() {
-    rejoinTimer?.scheduleTimeout()
+    rejoinTimer.scheduleTimeout()
     if socket.isConnected {
       rejoin()
     }
@@ -132,7 +134,7 @@ open class Channel {
   }
 
   /// Whether channel is joined and socket is connected
-  open var canPush: Bool { get { return socket.isConnected && isJoined }}
+  open var canPush: Bool { return socket.isConnected && isJoined }
 
   /**
    Push the event with payload to the channel
@@ -182,6 +184,39 @@ open class Channel {
   }
 
   /**
+   An overridable hook called every time a message passes through the channel
+
+   - Parameter msg: The message that's just been passed
+   - Returns: The message - modified or not
+   */
+  open func onMessage(msg: Message) -> Message {
+    return msg
+  }
+
+  /**
+   Checks if an event received by the socket belongs to this Channel
+
+   - Parameter msg: The message to check for membership
+   - Returns: bool
+   */
+  open func isMember(msg: Message) -> Bool {
+    guard msg.topic == topic else { return false }
+    let isLifecycleEvent = CHANNEL_LIFECYCLE_EVENTS.contains(msg.event)
+    if isLifecycleEvent && msg.joinRef != nil && msg.joinRef != self.joinRef {
+      socket.log(
+        kind: "channel",
+        msg: "dropping outdated message",
+        data: (msg.topic, msg.event, msg.payload, msg.joinRef)
+      )
+      return false
+    } else {
+      return true
+    }
+  }
+
+  open var joinRef: String { return joinPush.ref }
+
+  /**
    Pushes join channel message to server
 
    - Parameter timeout: Duration to wait for a response to join message
@@ -206,18 +241,66 @@ open class Channel {
    - Parameter msg: Instance of Message
    */
   open func trigger(msg: Message) {
-//    let handledMessage = self.onMessage(message)
-//
-//    self.bindings
-//      .filter( { return $0.event == message.event } )
-//      .forEach( { $0.callback(handledMessage) } )
+    let handledMsg = self.onMessage(msg: msg)
+    self.bindings
+      .filter( { return $0.event == handledMsg.event } )
+      .forEach( { $0.callback(handledMsg) } )
   }
 
-  open func isMember(msg: Message) -> Bool {
-    return true
+  /**
+   The reply event ref for a corresponding push
+
+   - Parameter ref: A push's ref
+   - Returns: The reply ref
+   */
+  open func replyEventName(ref: String) -> String { return "chan_reply_\(ref)" }
+
+  /// Computed vars for checking channel's state
+  open var isClosed: Bool { return state == ChannelState.closed }
+  open var isErrored: Bool { return state == ChannelState.errored }
+  open var isJoined: Bool { return state == ChannelState.joined }
+  open var isJoining: Bool { return state == ChannelState.joining }
+  open var isLeaving: Bool { return state == ChannelState.leaving }
+
+  /// Called from init(), sets bindings every instance needs
+  private func addInitialBindings() {
+    joinPush.receive(status: "ok") { (_ msg) in
+      self.state = ChannelState.joined
+      self.rejoinTimer.reset()
+      self.pushBuffer.forEach({ $0.send() })
+      self.pushBuffer = []
+    }
+    joinPush.receive(status: "timeout") { (_ msg) in
+      self.socket.log(kind: "channel", msg: "timeout \(self.topic) (\(self.joinRef))", data: self.joinPush.timeout)
+      self.createAndSendLeavePush()
+      self.state = ChannelState.errored
+      self.joinPush.reset()
+      self.rejoinTimer.scheduleTimeout()
+    }
+    onClose { (_ msg) in
+      self.rejoinTimer.reset()
+      self.socket.log(kind: "channel", msg: "close \(self.topic) \(self.joinRef)")
+      self.state = ChannelState.closed
+      self.socket.remove(channel: self)
+    }
+    onError { (msg) in
+      guard !self.isLeaving && !self.isClosed else { return }
+      self.socket.log(kind: "channel", msg: "error \(self.topic)", data: msg.payload)
+      self.state = ChannelState.errored
+      self.rejoinTimer.scheduleTimeout()
+    }
+    on(event: ChannelEvent.reply) { (msg) in
+      let replyEventName = self.replyEventName(ref: msg.ref)
+      let replyMsg = Message(topic: msg.topic, event: replyEventName, payload: msg.payload, ref: msg.ref)
+      self.trigger(msg: replyMsg)
+    }
   }
 
-  open var joinRef: String { get { return joinPush.ref }}
-
-  open var isJoined: Bool { get { return state == ChannelState.joined }}
+  /// Creates a Push with the leave event and sends it
+  @discardableResult
+  open func createAndSendLeavePush() -> Push {
+    let leavePush = pushClass.init(channel: self, event: ChannelEvent.leave, timeout: self.timeout)
+    leavePush.send()
+    return leavePush
+  }
 }

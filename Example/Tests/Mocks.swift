@@ -31,7 +31,7 @@ class MockConnectedSocket: Socket {
 class MockChannel: Channel {
   var triggerTimesCalled = 0
   var triggerMsg = Message()
-  var triggerCalled: Bool { get { return triggerTimesCalled > 0 }}
+  var triggerCalled: Bool { return triggerTimesCalled > 0 }
   override func trigger(msg: Message) {
     triggerTimesCalled += 1
     triggerMsg = msg
@@ -47,6 +47,18 @@ class MockChannel: Channel {
     rejoinCalled = true
     super.rejoin(timeout: timeout)
   }
+
+  var sendJoinTimeoutPassed = -1
+  override func sendJoin(timeout: Int) {
+    sendJoinTimeoutPassed = timeout
+    super.sendJoin(timeout: timeout)
+  }
+
+  var createAndSendLeavePushCalled = false
+  override func createAndSendLeavePush() -> Push {
+    createAndSendLeavePushCalled = true
+    return super.createAndSendLeavePush()
+  }
 }
 
 class MockPush: Push {
@@ -60,14 +72,17 @@ class MockPush: Push {
     sendCalled = true
   }
 
-  var receivedStatuses: Array <String> = []
-  override func receive(status: String, callback: ((Message) -> Void)) -> Push {
-    let testMsg = Message(
-      topic: "mock:push", event: "receive", payload: ["status": status], ref: "r", joinRef: "jr"
-    )
-    receivedStatuses.append(status)
-    callback(testMsg)
+  var receivedBindings: [(status: String, callback: (Message) -> Void)] = []
+  override func receive(status: String, callback: @escaping ((Message) -> Void)) -> Push {
+    receivedBindings.append((status: status, callback: callback))
+    super.receive(status: status, callback: callback)
     return self
+  }
+
+  var resendCalled = false
+  override func resend(timeout: Int) {
+    resendCalled = true
+    super.resend(timeout: timeout)
   }
 
   var triggerCalled = false
@@ -76,6 +91,12 @@ class MockPush: Push {
     triggerCalled = true
     triggerStatus = status
     super.trigger(status: status, payload: payload)
+  }
+
+  var resetCalled = false
+  override func reset() {
+    resetCalled = true
+    super.reset()
   }
 }
 

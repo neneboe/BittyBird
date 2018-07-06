@@ -45,8 +45,16 @@ open class Push {
   }
 
   @discardableResult
-  open func receive(status: String, callback: ((Message) -> Void)) -> Push {
+  open func receive(status: String, callback: @escaping ((Message) -> Void)) -> Push {
     return self
+  }
+
+  open func reset() {
+//    self.cancelRefEvent()
+    self.ref = ""
+//    self.refEvent = nil
+//    self.receivedMessage = nil
+    self.sent = false
   }
 
   open func startTimeout() {
