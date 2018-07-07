@@ -10,6 +10,7 @@
 		013C03CB20E5860B00ED0716 /* SerializerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 013C03CA20E5860B00ED0716 /* SerializerTests.swift */; };
 		013C03D020E5CA4C00ED0716 /* MessageTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 013C03CF20E5CA4C00ED0716 /* MessageTests.swift */; };
 		013C03D220E6982500ED0716 /* SocketTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 013C03D120E6982500ED0716 /* SocketTests.swift */; };
+		013F8A1F20F08104006C51F6 /* PresenceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 013F8A1E20F08104006C51F6 /* PresenceTests.swift */; };
 		015D34C620EC4EAE00ADB078 /* ChannelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 015D34C520EC4EAE00ADB078 /* ChannelTests.swift */; };
 		01E0A0AA20E45A6D00ABDDB2 /* BBTimerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01E0A0A920E45A6D00ABDDB2 /* BBTimerTests.swift */; };
 		01F34D4020ED5290006FBB47 /* Mocks.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01F34D3F20ED5290006FBB47 /* Mocks.swift */; };
@@ -22,6 +23,7 @@
 		013C03CA20E5860B00ED0716 /* SerializerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SerializerTests.swift; sourceTree = "<group>"; };
 		013C03CF20E5CA4C00ED0716 /* MessageTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageTests.swift; sourceTree = "<group>"; };
 		013C03D120E6982500ED0716 /* SocketTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SocketTests.swift; sourceTree = "<group>"; };
+		013F8A1E20F08104006C51F6 /* PresenceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PresenceTests.swift; sourceTree = "<group>"; };
 		015D34C520EC4EAE00ADB078 /* ChannelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChannelTests.swift; sourceTree = "<group>"; };
 		01E0A0A920E45A6D00ABDDB2 /* BBTimerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BBTimerTests.swift; sourceTree = "<group>"; };
 		01F34D3F20ED5290006FBB47 /* Mocks.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Mocks.swift; sourceTree = "<group>"; };
@@ -90,6 +92,7 @@
 				015D34C520EC4EAE00ADB078 /* ChannelTests.swift */,
 				013C03CF20E5CA4C00ED0716 /* MessageTests.swift */,
 				01F34D3F20ED5290006FBB47 /* Mocks.swift */,
+				013F8A1E20F08104006C51F6 /* PresenceTests.swift */,
 				01F34D4320F0188A006FBB47 /* PushTests.swift */,
 				013C03CA20E5860B00ED0716 /* SerializerTests.swift */,
 				013C03D120E6982500ED0716 /* SocketTests.swift */,
@@ -241,6 +244,7 @@
 				013C03D220E6982500ED0716 /* SocketTests.swift in Sources */,
 				01F34D4020ED5290006FBB47 /* Mocks.swift in Sources */,
 				013C03CB20E5860B00ED0716 /* SerializerTests.swift in Sources */,
+				013F8A1F20F08104006C51F6 /* PresenceTests.swift in Sources */,
 				01E0A0AA20E45A6D00ABDDB2 /* BBTimerTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

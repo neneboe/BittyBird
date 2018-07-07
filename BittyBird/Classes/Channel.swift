@@ -24,9 +24,10 @@ public enum ChannelEvent {
   public static let leave = "phx_leave"
 }
 
+/// Object to be used for subscribing to topics and brokering events between the client and server
 open class Channel {
   /// Server-side names of channel lifecycle events
-  let CHANNEL_LIFECYCLE_EVENTS: Array <String> = [
+  let CHANNEL_LIFECYCLE_EVENTS: Array<String> = [
     ChannelEvent.close, ChannelEvent.error, ChannelEvent.join, ChannelEvent.reply, ChannelEvent.leave
   ]
   /// Current state of the Channel
@@ -34,7 +35,7 @@ open class Channel {
   /// The topic of the Channel. e.g. "room: lobby"
   let topic: String
   /// The params sent when joining the channel
-  var params: Dictionary <String, Any>
+  var params: Dictionary<String, Any>
   /// The Socket that the channel belongs to
   let socket: Socket
   /// Array of event bindings as named tuples
@@ -46,7 +47,7 @@ open class Channel {
   /// Push to send when the channel calls .join()
   var joinPush: Push!
   /// Buffer of Pushes that will be sent once the Channel's socket connects
-  var pushBuffer: Array <Push> = []
+  var pushBuffer: Array<Push> = []
   /// Timer to attempt to rejoin
   var rejoinTimer: BBTimer!
   /// The type of Push class to use for creating new pushes
@@ -63,7 +64,7 @@ open class Channel {
    */
   init(
     topic: String,
-    params: Dictionary <String, Any>? = [:],
+    params: Dictionary<String, Any>? = [:],
     socket: Socket,
     pushClass: Push.Type = Push.self
   ) {
@@ -143,7 +144,7 @@ open class Channel {
    - Parameter payload: The event data
    - Parameter timeout: Optional duration to wait for a response to the push
    */
-  open func push(event: String, payload: Dictionary <String, Any>, timeout: Int? = nil) -> Push {
+  open func push(event: String, payload: Dictionary<String, Any>, timeout: Int? = nil) -> Push {
     guard !joinedOnce else {
       fatalError("tried to push \(event) to \(topic) before joining. Use channel.join() before pushing events.")
     }

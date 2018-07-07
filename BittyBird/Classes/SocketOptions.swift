@@ -12,7 +12,7 @@ public struct SocketOptions {
   public let heartbeatIntervalSeconds: Int?
   public let reconnectAfterSeconds: ((_ tries: Int) -> Int)?
   public let logger: ((_ kind: String, _ msg: String, _ data: Any) -> Void)?
-  public let params: Dictionary <String, Any>?
+  public let params: Dictionary<String, Any>?
   public let serializer: Serializer?
 
   public init(
@@ -20,7 +20,7 @@ public struct SocketOptions {
     heartbeatIntervalSeconds: Int? = nil,
     reconnectAfterSeconds: ((_ tries: Int) -> Int)? = nil,
     logger: ((_ kind: String, _ msg: String, _ data: Any) -> Void)? = nil,
-    params: Dictionary <String, Any>? = nil,
+    params: Dictionary<String, Any>? = nil,
     serializer: Serializer? = nil
   ) {
     self.timeout = timeout

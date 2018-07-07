@@ -12,7 +12,7 @@ public struct Message {
   /// The name of the event
   public var event: String
   /// The message data
-  public var payload: Dictionary <String, Any>
+  public var payload: Dictionary<String, Any>
   /// An id for the message
   public var ref: String
   /// An id from joining a channel
@@ -31,7 +31,7 @@ public struct Message {
   public init(
     topic: String = "",
     event: String = "",
-    payload: Dictionary <String, Any> = [:],
+    payload: Dictionary<String, Any> = [:],
     ref: String = "",
     joinRef: String? = nil
   ) {

@@ -14,7 +14,7 @@ class SocketSpec: QuickSpec {
   @objc func timerStub() {
     ()
   }
-  
+
   override func spec() {
     describe("A Socket") {
       let wsEndPoint = "ws://localhost:4000/socket/websocket"
@@ -189,7 +189,7 @@ class SocketSpec: QuickSpec {
 
       describe("methods to register callbacks on state change events") {
         let eventCallback = { () -> Void in () }
-        
+
         describe(".onOpen") {
           it("adds passed in callback to `stateChangeCallbacks.open`") {
             precondition(wsSocket.stateChangeCallbacks.open.count == 0)
@@ -378,7 +378,7 @@ class SocketSpec: QuickSpec {
           mockConnectedSocket.push(msg: testMsg)
           expect(logKind) == "push"
           expect(logMsg) == "room:lobby pushTest (jr, r)"
-          var data = logData as? Dictionary <String, Any>
+          var data = logData as? Dictionary<String, Any>
           expect(data!["a"] as? String) == "b"
         }
 
@@ -499,7 +499,7 @@ class SocketSpec: QuickSpec {
           mockConnectedSocket.onConnMessage(rawMessage: data)
           expect(logKind) == "receive"
           expect(logMsg) == " room:lobby pushTest r"
-          var ld = logData as! Dictionary <String, Any>
+          var ld = logData as! Dictionary<String, Any>
           expect(ld["a"] as? String) == testMsg.payload["a"] as? String
         }
 

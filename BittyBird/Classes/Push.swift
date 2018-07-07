@@ -5,13 +5,14 @@
 //  Created by Nick Eneboe on 7/2/18.
 //
 
+/// Encapsulates the actions associated with pushing messages to server
 open class Push {
   /// The channel the push came from
   let channel: Channel
   /// The name of the event, e.g. "join"
   let event: String
   /// The payload, e.g. ["user_id": "abc123"]
-  var payload: Dictionary <String, Any>
+  var payload: Dictionary<String, Any>
   /// The push timeout, in seconds
   var timeout: Int
   /// Server's response to the push
@@ -37,7 +38,7 @@ open class Push {
    - Returns: A new instance of Push
    */
   // Init is `required` so Push class can be dependency-injected on Channel initialization
-  required public init(channel: Channel, event: String, payload: Dictionary <String, Any> = [:], timeout: Int) {
+  required public init(channel: Channel, event: String, payload: Dictionary<String, Any> = [:], timeout: Int) {
     self.channel = channel
     self.event = event
     self.payload = payload
@@ -147,7 +148,7 @@ open class Push {
    - Parameter status: The status to pass along in a messages payload to channel.trigger
    - Parameter payload: Used as the payload in the message sent to channel.trigger
    */
-  open func trigger(status: String, payload: Dictionary <String, Any>) {
+  open func trigger(status: String, payload: Dictionary<String, Any>) {
     /// If there is no ref event, then there is nothing to trigger on the channel
     guard refEvent != nil else { return }
 

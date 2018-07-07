@@ -9,10 +9,10 @@ import Starscream
 
 /// Stores callbacks to be triggered on connection events
 public struct StateChangeCallbacks {
-  var open: Array <() -> Void> = []
-  var close: Array <() -> Void> = []
-  var error: Array <() -> Void> = []
-  var message: Array <() -> Void> = []
+  var open: Array<() -> Void> = []
+  var close: Array<() -> Void> = []
+  var error: Array<() -> Void> = []
+  var message: Array<() -> Void> = []
 }
 
 /// A web socket connection to the server over which channels are multiplexed
@@ -40,7 +40,7 @@ open class Socket {
   /// Configurable, optional logger function, defaults to noop
   public let logger: ((_ kind: String, _ msg: String, _ data: Any?) -> Void)
   /// Configurable, optional params passed to server when connecting
-  public let params: Dictionary <String, Any>
+  public let params: Dictionary<String, Any>
 
   // TODO: Configurable, optional websocket transport - uses Starscream WebSocket by default
   //  private let transport: Any
@@ -50,7 +50,7 @@ open class Socket {
   open let serializer: Serializer
 
   /// List of instances of Channel that are connected via the socket
-  public var channels: Array <Channel> = []
+  public var channels: Array<Channel> = []
   /// The URL, including the params, of the socket server
   public var endPointURL: URL
   /// Instance of Timer that sends out a heartbeat message on trigger
@@ -62,7 +62,7 @@ open class Socket {
   /// Ref counter for each Message instance passed through the socket
   open var ref: UInt64 = UInt64.min // 0
   /// Buffer for callbacks that will send messages once the socket has connected
-  public var sendBuffer: Array <() -> Void> = []
+  public var sendBuffer: Array<() -> Void> = []
   /// Disable sending heartbeats by setting this to true.
   public var skipHeartbeat = false
   /// Dictionary for storing arrays of callbacks to be run on certain socket events
@@ -215,7 +215,7 @@ open class Socket {
    - Parameter chanParams: Params sent to server when channel tries to join
    - Returns: A new Channel instance
    */
-  open func channel(topic: String, chanParams: Dictionary <String, Any>? = nil) -> Channel {
+  open func channel(topic: String, chanParams: Dictionary<String, Any>? = nil) -> Channel {
     let chan = Channel(topic: topic, params: chanParams, socket: self)
     channels.append(chan)
     return chan
@@ -308,7 +308,7 @@ open class Socket {
    - Parameter params: Optional Dictionary of params
    - Returns: A URL instance
    */
-  private class func buildURLWithParams(endPoint: String, params: Dictionary <String, Any>?) -> URL {
+  private class func buildURLWithParams(endPoint: String, params: Dictionary<String, Any>?) -> URL {
     let baseURL = URL(string: endPoint)!
     var urlComponents = URLComponents(url: baseURL, resolvingAgainstBaseURL: false)
     var urlParams = params ?? [:]
