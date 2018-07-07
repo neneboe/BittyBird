@@ -1,4 +1,9 @@
-// https://github.com/Quick/Quick
+//
+//  SerializerTests.swift
+//  BittyBird_Tests
+//
+//  Created by Nick Eneboe on 6/28/18.
+//
 
 import Quick
 import Nimble
@@ -49,7 +54,10 @@ class SerializerSpec: QuickSpec {
       // TODO: Add more contexts
       describe("#decode(rawPayload, callback)") {
         it("passes decoded `rawPayload` to `callback`") {
-          var decodedMsg = Message(topic: "t", event: "e", payload: ["k": "v"], ref: "r") // doesn't match testMsg
+          // decodedMsg needs to be different than testMsg1, because we're testing that
+          // the callback gets called with the rawPayload of testMsg1, then overwrites decodedMsg
+          // with the same values as testMsg1
+          var decodedMsg = Message(topic: "t", event: "e", payload: ["k": "v"], ref: "r")
           let callback = {(msg: Message) -> Void in decodedMsg = msg}
           serializer.decode(rawPayload: binMsg1, callback: callback)
           expect(decodedMsg.topic) == testMsg1.topic

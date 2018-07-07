@@ -3,7 +3,6 @@
 //  BittyBird_Tests
 //
 //  Created by Nick Eneboe on 6/29/18.
-//  Copyright © 2018 CocoaPods. All rights reserved.
 //
 
 import Quick
@@ -80,10 +79,16 @@ class SocketSpec: QuickSpec {
       }
 
       describe("initializer") {
-        // TODO: Check for more properties
         it("sets the correct property names") {
-          expect(wsSocket.timeout).notTo(beNil())
-          expect(wsSocket.reconnectAfterSeconds).notTo(beNil())
+          expect(wsSocket.connection).toNot(beNil())
+          expect(wsSocket.endPointURL).toNot(beNil())
+          expect(wsSocket.heartbeatIntervalSeconds).toNot(beNil())
+          expect(wsSocket.logger).toNot(beNil())
+          expect(wsSocket.params).toNot(beNil())
+          expect(wsSocket.reconnectAfterSeconds).toNot(beNil())
+          expect(wsSocket.timeout).toNot(beNil())
+          expect(wsSocket.serializer).toNot(beNil())
+          expect(wsSocket.reconnectTimer).toNot(beNil())
         }
 
         it("accepts an instance of SocketOptions") {

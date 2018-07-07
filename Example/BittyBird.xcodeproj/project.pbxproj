@@ -13,6 +13,7 @@
 		015D34C620EC4EAE00ADB078 /* ChannelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 015D34C520EC4EAE00ADB078 /* ChannelTests.swift */; };
 		01E0A0AA20E45A6D00ABDDB2 /* BBTimerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01E0A0A920E45A6D00ABDDB2 /* BBTimerTests.swift */; };
 		01F34D4020ED5290006FBB47 /* Mocks.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01F34D3F20ED5290006FBB47 /* Mocks.swift */; };
+		01F34D4420F0188A006FBB47 /* PushTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01F34D4320F0188A006FBB47 /* PushTests.swift */; };
 		64AAA7EAF7F794B9B7DFC8B3 /* Pods_BittyBird_Tests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 554D107881F2D1976A253706 /* Pods_BittyBird_Tests.framework */; };
 /* End PBXBuildFile section */
 
@@ -24,6 +25,7 @@
 		015D34C520EC4EAE00ADB078 /* ChannelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChannelTests.swift; sourceTree = "<group>"; };
 		01E0A0A920E45A6D00ABDDB2 /* BBTimerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BBTimerTests.swift; sourceTree = "<group>"; };
 		01F34D3F20ED5290006FBB47 /* Mocks.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Mocks.swift; sourceTree = "<group>"; };
+		01F34D4320F0188A006FBB47 /* PushTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PushTests.swift; sourceTree = "<group>"; };
 		0FFFFED52E39AEC83943F9BD /* BittyBird.podspec */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = BittyBird.podspec; path = ../BittyBird.podspec; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
 		554D107881F2D1976A253706 /* Pods_BittyBird_Tests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_BittyBird_Tests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		607FACE51AFB9204008FA782 /* BittyBird_Tests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = BittyBird_Tests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -88,6 +90,7 @@
 				015D34C520EC4EAE00ADB078 /* ChannelTests.swift */,
 				013C03CF20E5CA4C00ED0716 /* MessageTests.swift */,
 				01F34D3F20ED5290006FBB47 /* Mocks.swift */,
+				01F34D4320F0188A006FBB47 /* PushTests.swift */,
 				013C03CA20E5860B00ED0716 /* SerializerTests.swift */,
 				013C03D120E6982500ED0716 /* SocketTests.swift */,
 				607FACE91AFB9204008FA782 /* Supporting Files */,
@@ -234,6 +237,7 @@
 			files = (
 				015D34C620EC4EAE00ADB078 /* ChannelTests.swift in Sources */,
 				013C03D020E5CA4C00ED0716 /* MessageTests.swift in Sources */,
+				01F34D4420F0188A006FBB47 /* PushTests.swift in Sources */,
 				013C03D220E6982500ED0716 /* SocketTests.swift in Sources */,
 				01F34D4020ED5290006FBB47 /* Mocks.swift in Sources */,
 				013C03CB20E5860B00ED0716 /* SerializerTests.swift in Sources */,

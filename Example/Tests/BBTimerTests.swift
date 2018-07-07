@@ -1,4 +1,9 @@
-// https://github.com/Quick/Quick
+//
+//  BBTimerTests.swift
+//  BittyBird_Tests
+//
+//  Created by Nick Eneboe on 6/27/18.
+//
 
 import Quick
 import Nimble

@@ -28,7 +28,7 @@ public struct Message {
        - joinRef: An id from joining a channel
    - Returns: An instance of Message
    */
-  init(
+  public init(
     topic: String = "",
     event: String = "",
     payload: Dictionary <String, Any> = [:],

@@ -3,7 +3,6 @@
 //  BittyBird_Tests
 //
 //  Created by Nick Eneboe on 7/4/18.
-//  Copyright © 2018 CocoaPods. All rights reserved.
 //
 
 import Starscream
@@ -18,6 +17,8 @@ class MockConnection: WebSocket {
   override func connect() { connectCalled = true }
 }
 
+
+
 class MockConnectedSocket: Socket {
   override var isConnected: Bool { get { return true }}
 
@@ -27,6 +28,8 @@ class MockConnectedSocket: Socket {
     super.push(msg: msg)
   }
 }
+
+
 
 class MockChannel: Channel {
   var triggerTimesCalled = 0
@@ -59,12 +62,27 @@ class MockChannel: Channel {
     createAndSendLeavePushCalled = true
     return super.createAndSendLeavePush()
   }
+
+  var offCalledWith = ""
+  var offCalled: Bool { return offCalledWith != "" }
+  override func off(event: String) {
+    offCalledWith = event
+    super.off(event: event)
+  }
 }
+
 
 class MockPush: Push {
   var startTimeoutCalled = false
   override func startTimeout() {
     startTimeoutCalled = true
+    super.startTimeout()
+  }
+
+  var cancelTimeoutCalled = false
+  override func cancelTimeout() {
+    cancelTimeoutCalled = true
+    super.cancelTimeout()
   }
 
   var sendCalled = false
@@ -98,7 +116,21 @@ class MockPush: Push {
     resetCalled = true
     super.reset()
   }
+
+  var cancelRefEventCalled = false
+  override func cancelRefEvent() {
+    cancelRefEventCalled = true
+    super.cancelRefEvent()
+  }
+
+  var matchReceiveCalled = false
+  override func matchReceive(status: String, msg: Message) {
+    matchReceiveCalled = true
+    super.matchReceive(status: status, msg: msg)
+  }
 }
+
+
 
 class MockSerializer: Serializer {
   var encodeCalled = false

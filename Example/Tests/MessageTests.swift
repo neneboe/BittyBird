@@ -3,7 +3,6 @@
 //  BittyBird_Tests
 //
 //  Created by Nick Eneboe on 6/28/18.
-//  Copyright © 2018 CocoaPods. All rights reserved.
 //
 
 import Quick
