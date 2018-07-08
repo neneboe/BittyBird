@@ -259,7 +259,7 @@ class ChannelSpec: QuickSpec {
 
       describe(".on") {
         it("adds the passed in event binding to the `bindings` list") {
-          actualChannel.on(event: "testOn", callback: { (msg) -> Void in let _ = "asdf" })
+          actualChannel.on(event: "testOn") { (msg) in () }
           expect(actualChannel.bindings.map({ $0.event }).contains("testOn")).to(beTrue())
         }
       }

@@ -227,7 +227,7 @@ open class Socket {
    - Parameter msg: An instance of Message
    */
   open func push(msg: Message) {
-    let callback = { () -> Void in
+    let callback = { ()
       self.serializer.encode(msg: msg, callback: { (data) -> Void in
         self.connection.write(data: data)
       })

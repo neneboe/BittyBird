@@ -5,11 +5,7 @@
 [![License](https://img.shields.io/cocoapods/l/BittyBird.svg?style=flat)](https://cocoapods.org/pods/BittyBird)
 [![Platform](https://img.shields.io/cocoapods/p/BittyBird.svg?style=flat)](https://cocoapods.org/pods/BittyBird)
 
-BittyBird is still a work in progress. When done, the final implementation will be as close as possible to the official [Phoenix Channels Javascript client](https://github.com/phoenixframework/phoenix/blob/master/assets/js/phoenix.js). So close in fact that you can basically use their documentation from that client to figure everything out with this one.
-
-## Requirements
-
-BittyBird was written using Swift 4.1.2 targeted at devices using iOS 8.0 and above. It's dependencies are [SwiftMsgPack](https://github.com/malcommac/SwiftMsgPack), which it uses for its MessagePack implementaion, and [Starscream](https://github.com/daltoniam/Starscream), a Swift WebSocket lib.
+BittyBird is a Swift client library for interacting with Phoenix Channels that defaults to using MessagePack for encoding and decoding messages to/from binary. However, it can be configured to use JSON or any other serialization method instead. Check out this blog post on [how to set up your Phoenix app to use MessagePack for serialization](https://strongwing.studio/2018/07/07/setting-up-phoenix-channels-to-use-messagepack-for-serialization/).
 
 ## Installation
 BittyBird is available through [CocoaPods](https://cocoapods.org). To install
@@ -19,11 +15,65 @@ it, simply add the following line to your Podfile:
 pod 'BittyBird'
 ```
 
-## Testing
+## Requirements
 
-To run the tests, clone the repo, run `pod install` from the Example directory, then tests should pass.
+BittyBird was written for connecting to Phoenix apps versions >=1.3 using Swift 4.1.2 targeted at devices using iOS 8.0 and above. It's dependencies are [SwiftMsgPack](https://github.com/malcommac/SwiftMsgPack), which it uses for its MessagePack implementaion, and [Starscream](https://github.com/daltoniam/Starscream), a Swift WebSocket library.
+
+## Usage
+
+##### Creating a Socket Examples
+
+    // Production
+    let socket = Socket(endpoint: "wss://yoursite.com/socket/websocket")
+
+    // Development
+    let socket = Socket(endpoint: "ws://localhost:4000/socket/websocket")
+    
+    // With Options - All SocketOptions parameters are optional
+    let socketOptions = SocketOptions(
+      timeout: 15, heartbeatIntervalSeconds: 60,
+      reconnectAfterSeconds: { (tries: Int) -> Int in return 100 },
+      logger: { (kind: String, msg: String, data: Any?) in
+        print("kind: \(kind), msg: \(msg), data: \(data)")   
+      },
+      params: ["customParamKey": "customParamValue"],
+      serializer: CustomSerializer()
+    )
+    let socket = Socket(endpoint: "wss://yoursite.com/socket/websocket", opts: socketOptions)
+
+##### Creating and Joining Channels Examples
+
+    // Creating a channel without parameters
+    let channel = socket.channel(topic: "room:lobby")
+    
+    // Creating a channel with parameters, passed to Phoenix channel's join function
+    let channel = socket.channel(topic: "room:lobby", chanParams: ["customParam": "customValue"])
+    
+    // Joining a channel
+    channel.join()
+      .receive(status: "ok") { (msg) in /* handle successful join */ }
+      .receive(status: "error") { (errorMsg) in /* handle error */ }
+      .receive(status: "timeout") { (_) in /* handle timeout */ }
+    
+##### Events
+
+    // Handling events
+    channel.on(event: "someEvent") { (msg) in
+      /* Handle "someEvent" message, probably doing something with msg.payload */ 
+    }
+    
+    // Pushing messages
+    channel.push(event: "somePushEvent", payload: ["aKey": "aValue", "anotherKey": "anotherValue"])
+    
+    // Pushing messages and optionally receiving replys
+    channel.push(event: "somePushEvent", payload: ["aKey": "aValue"])
+      .receive(status: "ok") { (msg) in /* handle push reply */ }
+      .receive(status: "error") { (errorMsg) in /* handle push error */ }
+      .receive(status: "timeout") { (_) in /* handle push timeout */ }
 
 ## About
+
+The main goal of BittyBird was to be as close to the [Phoenix JS client](https://github.com/phoenixframework/phoenix/blob/master/assets/js/phoenix.js) as possible. I also tried to keep it as customizable as possible. This means almost all functions are open, so you can override them with your own implementations if you want to. Just be careful.
 
 #### Notable API Differences from Phoenix JS Client
 
@@ -38,8 +88,23 @@ To run the tests, clone the repo, run `pod install` from the Example directory, 
 
 #### Author
 
-Nick Eneboe - Shout out to SwiftPhoenixClient though. This repo borrows a lot from SwiftPhoenixClient, but I wanted to write it from scratch for my own practice.
+BittyBird was written by Nick Eneboe. Credit to [SwiftPhoenixClient](https://github.com/davidstump/SwiftPhoenixClient), from which this repo borrows a lot. Also credit to the Phoenix Framework contributors for the API design of [phoenix.js](https://github.com/phoenixframework/phoenix/blob/master/assets/js/phoenix.js).
 
-#### License
+## Developing
+
+To setup BittyBird for development on your machine:
+
+  1. Clone the repo
+  2. In a terminal, cd to the BittyBird/Example directory
+  3. Run `pod install`
+  4. Open BittyBird/Example/BittyBird.xcworkspace in Xcode
+  5. Type ⌘+U to run the tests and make sure all the tests pass.
+
+##### TODO
+
+  * Implement Presence
+  * Make a JSON serializer
+
+## License
 
 BittyBird is available under the MIT license. See the LICENSE file for more info.

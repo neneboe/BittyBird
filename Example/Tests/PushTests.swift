@@ -95,6 +95,17 @@ class PushSpec: QuickSpec {
           callbackMsg = Message()
         }
 
+        it("can be chained") {
+          var callback1Run = false
+          var callback2Run = false
+          realPush
+            .receive(status: "testStatus") { _ in callback1Run = true }
+            .receive(status: "antoherStaus") { (_ msg) in callback2Run = true }
+          realPush.recHooks.forEach({ $0.callback(Message()) })
+          expect(callback1Run).to(beTrue())
+          expect(callback2Run).to(beTrue())
+        }
+
         context("when push has already received the response message with the passed in status") {
           it("runs the callback immediately before adding bindings to `recHooks`") {
             realPush.receivedResp = testMsg
