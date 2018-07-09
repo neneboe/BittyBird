@@ -83,7 +83,7 @@ open class Socket {
     self.params = opts.params ?? [:]
     self.reconnectAfterSeconds = opts.reconnectAfterSeconds ?? Socket.RECONNECTAFTERFUNC
     self.timeout = opts.timeout ?? Socket.TIMEOUT
-    self.serializer = opts.serializer ?? Serializer()
+    self.serializer = opts.serializer ?? JSONSerializer()
     self.reconnectTimer = BBTimer(callback: {
       self.disconnect({ self.connect() })
     }, timerCalc: reconnectAfterSeconds)
@@ -276,28 +276,35 @@ open class Socket {
     sendBuffer = []
   }
 
-  /// Called when connection receives a data message
+  /// Called when connection receives a binary data message, like in MessagePack
   open func onConnMessage(rawMessage: Data) {
     serializer.decode(rawPayload: rawMessage) { (msg) in
-      log(
-        kind: "receive",
-        msg: "\(msg.payload["status"] ?? "") \(msg.topic) \(msg.event) \(msg.ref)",
-        data: msg.payload
-      )
-      channels.filter({ $0.isMember(msg: msg) }).forEach({ $0.trigger(msg: msg) })
-      stateChangeCallbacks.message.forEach({ $0() })
-
-      if msg.ref == pendingHeartbeatRef {
-        log(kind: "transport", msg: "Received pending heartbeat")
-        pendingHeartbeatRef = nil
-      }
+      self.handleNewMessage(msg: msg)
     }
   }
 
-  /// This should't get called if you're using MessagePack, but if you
-  /// swap in a json serialzer it will.
+  /// Called when connection receives a string data message, like JSON
   open func onConnMessage(rawMessage: String) {
-    // no-op
+    let data = rawMessage.data(using: String.Encoding.utf8)!
+    serializer.decode(rawPayload: data) { (msg) in
+      self.handleNewMessage(msg: msg)
+    }
+  }
+
+  /// Callback for onConnMessage methods
+  private func handleNewMessage(msg: Message) {
+    log(
+      kind: "receive",
+      msg: "\(msg.payload["status"] ?? "") \(msg.topic) \(msg.event) \(msg.ref)",
+      data: msg.payload
+    )
+    channels.filter({ $0.isMember(msg: msg) }).forEach({ $0.trigger(msg: msg) })
+    stateChangeCallbacks.message.forEach({ $0() })
+
+    if msg.ref == pendingHeartbeatRef {
+      log(kind: "transport", msg: "Received pending heartbeat")
+      pendingHeartbeatRef = nil
+    }
   }
 
 

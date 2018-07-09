@@ -35,7 +35,7 @@ class SocketSpec: QuickSpec {
       var mockChannel: MockChannel!
       var mockConnection: MockConnection!
       var mockSocket: Socket!
-      var mockSerializer: MockSerializer!
+      var mockSerializer: MockJSONSerializer!
       var mockConnectedSocketOptions: SocketOptions!
       var mockConnectedSocket: MockConnectedSocket!
       var testTimer: Timer?
@@ -54,7 +54,7 @@ class SocketSpec: QuickSpec {
         wssSocket = Socket(endPoint: wssEndPoint)
         mockConnection = MockConnection(url: URL(string: wsEndPoint)!)
         mockSocket = Socket(connection: mockConnection)
-        mockSerializer = MockSerializer()
+        mockSerializer = MockJSONSerializer()
         mockConnectedSocketOptions = SocketOptions(
           logger: { (_ kind, _ msg, _ data) in
             logKind = kind
@@ -475,10 +475,79 @@ class SocketSpec: QuickSpec {
         }
       }
 
-      describe(".onConnMessage") {
-        var data = Data()
+      describe(".onConnMessage with JSON data") {
+        var data: String!
 
         beforeEach {
+          let body = [
+            "topic": testMsg.topic,
+            "event": testMsg.event,
+            "payload": testMsg.payload,
+            "ref": testMsg.ref,
+            "joinRef": testMsg.joinRef as Any
+          ]
+          let jsonData = try! JSONSerialization.data(withJSONObject: body)
+          data = String(data: jsonData, encoding: String.Encoding.utf8)!
+        }
+
+        it("decodes the message") {
+          mockConnectedSocket.onConnMessage(rawMessage: data)
+          expect(mockSerializer.decodeCalled).to(beTrue())
+        }
+
+        it("logs a received message") {
+          mockConnectedSocket.onConnMessage(rawMessage: data)
+          expect(logKind) == "receive"
+          expect(logMsg) == " room:lobby pushTest r"
+          expect(logData as? NSDictionary) == testMsg.payload as NSDictionary
+        }
+
+        it("sends message to member channels") {
+          mockConnectedSocket.channels = [mockChannel]
+          mockConnectedSocket.onConnMessage(rawMessage: data)
+          expect(mockChannel.triggerCalled).to(beTrue())
+        }
+
+        it("triggers callbacks in `stateChangeCallbacks.message`") {
+          mockConnectedSocket.stateChangeCallbacks.message = [callback1, callback2]
+          mockConnectedSocket.onConnMessage(rawMessage: data)
+          expect(callback1Triggered).to(beTrue())
+          expect(callback2Triggered).to(beTrue())
+        }
+
+        context("when message is reply to heartbeat") {
+          beforeEach {
+            mockConnectedSocket.pendingHeartbeatRef = testMsg.ref
+          }
+
+          it("logs pending heartbeat received") {
+            mockConnectedSocket.onConnMessage(rawMessage: data)
+            expect(logKind) == "transport"
+            expect(logMsg) == "Received pending heartbeat"
+          }
+
+          it("resets `pendingHeartbeatRef`") {
+            mockConnectedSocket.onConnMessage(rawMessage: data)
+            expect(mockConnectedSocket.pendingHeartbeatRef).to(beNil())
+          }
+        }
+      }
+
+      describe(".onConnMessage with MessagePack data") {
+        var data = Data()
+        var mockMsgPackSerializer: MockMsgPackSerializer!
+
+        beforeEach {
+          mockMsgPackSerializer = MockMsgPackSerializer()
+          let msgPackSocketOptions = SocketOptions(
+            logger: { (_ kind, _ msg, _ data) in
+              logKind = kind
+              logMsg = msg
+              logData = data
+          },
+            serializer: mockMsgPackSerializer
+          )
+          mockConnectedSocket = MockConnectedSocket(connection: mockConnection, opts: msgPackSocketOptions)
           data = Data()
           try! data.pack(
             [
@@ -490,9 +559,10 @@ class SocketSpec: QuickSpec {
             ]
           )
         }
+
         it("decodes the message") {
           mockConnectedSocket.onConnMessage(rawMessage: data)
-          expect(mockSerializer.decodeCalled).to(beTrue())
+          expect(mockMsgPackSerializer.decodeCalled).to(beTrue())
         }
 
         it("logs a received message") {

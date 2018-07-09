@@ -132,7 +132,19 @@ class MockPush: Push {
 
 
 
-class MockSerializer: Serializer {
+class MockMsgPackSerializer: MsgPackSerializer {
+  var encodeCalled = false
+  override func encode(msg: Message, callback: ((Data) -> Void)) {
+    encodeCalled = true
+  }
+
+  var decodeCalled = false
+  override func decode(rawPayload: Data, callback: ((Message) -> Void)) {
+    decodeCalled = true
+    super.decode(rawPayload: rawPayload, callback: callback)
+  }
+}
+class MockJSONSerializer: JSONSerializer {
   var encodeCalled = false
   override func encode(msg: Message, callback: ((Data) -> Void)) {
     encodeCalled = true

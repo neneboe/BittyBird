@@ -12,8 +12,8 @@ import SwiftMsgPack
 
 class SerializerSpec: QuickSpec {
   override func spec() {
-    describe("A Serializer") {
-      let serializer = Serializer()
+    describe("A MsgPackSerializer") {
+      let serializer = MsgPackSerializer()
       let key = "key"
       let stringValue = "value"
       let testMsg1 = Message(

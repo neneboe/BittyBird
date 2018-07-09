@@ -5,7 +5,7 @@
 [![License](https://img.shields.io/cocoapods/l/BittyBird.svg?style=flat)](https://cocoapods.org/pods/BittyBird)
 [![Platform](https://img.shields.io/cocoapods/p/BittyBird.svg?style=flat)](https://cocoapods.org/pods/BittyBird)
 
-BittyBird is a Swift client library for interacting with Phoenix Channels that defaults to using MessagePack for encoding and decoding messages to/from binary. However, it can be configured to use JSON or any other serialization method instead. Check out this blog post on [how to set up your Phoenix app to use MessagePack for serialization](https://strongwing.studio/2018/07/07/setting-up-phoenix-channels-to-use-messagepack-for-serialization/).
+BittyBird is a Swift client library for interacting with Phoenix Channels. It defaults to using JSON for serialization, but also comes with a MessagePack serializer for encoding and decoding messages to/from binary. Check out this blog post on [how to set up your Phoenix app to use MessagePack for serialization](https://strongwing.studio/2018/07/07/setting-up-phoenix-channels-to-use-messagepack-for-serialization/).
 
 ## Installation
 BittyBird is available through [CocoaPods](https://cocoapods.org). To install
@@ -21,15 +21,19 @@ BittyBird was written for connecting to Phoenix apps versions >=1.3 using Swift 
 
 ## Usage
 
-##### Creating a Socket Examples
+##### Examples of Creating a Socket
 
     // Production
-    let socket = Socket(endpoint: "wss://yoursite.com/socket/websocket")
+    let socket = Socket(endPoint: "wss://yoursite.com/socket/websocket")
 
     // Development
-    let socket = Socket(endpoint: "ws://localhost:4000/socket/websocket")
+    let socket = Socket(endPoint: "ws://localhost:4000/socket/websocket")
     
-    // With Options - All SocketOptions parameters are optional
+    // Use MessagePack for serialization
+    let socketOptions = SocketOptions(serializer: MsgPackSerializer())
+    let socket = Socket(endPoint: "wss://yoursite.com/socket/websocket", opts: socketOptions)
+    
+    // More Options - All SocketOptions parameters are optional
     let socketOptions = SocketOptions(
       timeout: 15, heartbeatIntervalSeconds: 60,
       reconnectAfterSeconds: { (tries: Int) -> Int in return 100 },
@@ -37,11 +41,11 @@ BittyBird was written for connecting to Phoenix apps versions >=1.3 using Swift 
         print("kind: \(kind), msg: \(msg), data: \(data)")   
       },
       params: ["customParamKey": "customParamValue"],
-      serializer: CustomSerializer()
+      serializer: CustomSerializer() // Any class that conforms to Serializer protocol will work
     )
-    let socket = Socket(endpoint: "wss://yoursite.com/socket/websocket", opts: socketOptions)
+    let socket = Socket(endPoint: "wss://yoursite.com/socket/websocket", opts: socketOptions)
 
-##### Creating and Joining Channels Examples
+##### Examples of Creating and Joining Channels
 
     // Creating a channel without parameters
     let channel = socket.channel(topic: "room:lobby")
@@ -55,7 +59,7 @@ BittyBird was written for connecting to Phoenix apps versions >=1.3 using Swift 
       .receive(status: "error") { (errorMsg) in /* handle error */ }
       .receive(status: "timeout") { (_) in /* handle timeout */ }
     
-##### Events Examples
+##### Examples of Pushing and Handling Events
 
     // Handling events
     channel.on(event: "someEvent") { (msg) in
@@ -100,10 +104,6 @@ To setup BittyBird for development on your machine:
   3. Run `pod install`
   4. Open BittyBird/Example/BittyBird.xcworkspace in Xcode
   5. Type ⌘+U to run the tests and make sure all the tests pass.
-
-##### TODO
-
-  * Make a JSON serializer
 
 ## License
 

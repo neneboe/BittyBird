@@ -8,6 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		013F8A1D20F080C8006C51F6 /* Presence.swift in Sources */ = {isa = PBXBuildFile; fileRef = 013F8A1C20F080C8006C51F6 /* Presence.swift */; };
+		013F8A2120F417E7006C51F6 /* Serializer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 013F8A2020F417E7006C51F6 /* Serializer.swift */; };
+		01CFC66320F41A5E0027F9F2 /* JSONSerializer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01CFC66220F41A5E0027F9F2 /* JSONSerializer.swift */; };
 		01F34D4220EDACDD006FBB47 /* Push.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01F34D4120EDACDD006FBB47 /* Push.swift */; };
 		0777D3B7CE66BEDB6169679B1111A65C /* Quick-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = EA236ADF6F943450EE9C48FADE777499 /* Quick-dummy.m */; };
 		09DDBAF82F25DDF19B75A06FAA8A94C4 /* Callsite.swift in Sources */ = {isa = PBXBuildFile; fileRef = 642262BF8E1A3BA8955CEBDC34D502B0 /* Callsite.swift */; };
@@ -56,7 +58,7 @@
 		5BF274C2DEF332ED79B1CD15CFEC3498 /* ThrowError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CA134D368AFBE216E1811BF17462D6C /* ThrowError.swift */; settings = {COMPILER_FLAGS = "-DPRODUCT_NAME=Nimble/Nimble"; }; };
 		5C393064D34C7BDB2C8AD99A7944B3E5 /* DSL.swift in Sources */ = {isa = PBXBuildFile; fileRef = BEC78F9557E47DF2150967EA5835FEFB /* DSL.swift */; };
 		5DBCC0E4C72649C9A39A00D40D944DDA /* Nimble-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F9EDD2EF20CCFAA59F62F498465FB82 /* Nimble-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		5EED48B2AF94399EBEE6F7D8BF139A13 /* Serializer.swift in Sources */ = {isa = PBXBuildFile; fileRef = E846E012D88AFF86A9F834B3321764CB /* Serializer.swift */; };
+		5EED48B2AF94399EBEE6F7D8BF139A13 /* MsgPackSerializer.swift in Sources */ = {isa = PBXBuildFile; fileRef = E846E012D88AFF86A9F834B3321764CB /* MsgPackSerializer.swift */; };
 		5F9AFDECC14365CD10F3D83D50020E32 /* CwlMachBadInstructionHandler.m in Sources */ = {isa = PBXBuildFile; fileRef = 3817D75198C0B6B780E10662AB5D0F66 /* CwlMachBadInstructionHandler.m */; settings = {COMPILER_FLAGS = "-DPRODUCT_NAME=Nimble/Nimble"; }; };
 		60D30956A39B3934050D5B914F2542BF /* QCKDSL.h in Headers */ = {isa = PBXBuildFile; fileRef = CEFCAC141AB216B85034BF1761C00F4F /* QCKDSL.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		62D26CE7BA3AEDB4E5E87218FDCBBA90 /* Functional.swift in Sources */ = {isa = PBXBuildFile; fileRef = A943F8C978E850A0BD12425D5F317B28 /* Functional.swift */; settings = {COMPILER_FLAGS = "-DPRODUCT_NAME=Nimble/Nimble"; }; };
@@ -199,6 +201,8 @@
 
 /* Begin PBXFileReference section */
 		013F8A1C20F080C8006C51F6 /* Presence.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = Presence.swift; path = BittyBird/Classes/Presence.swift; sourceTree = "<group>"; };
+		013F8A2020F417E7006C51F6 /* Serializer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = Serializer.swift; path = BittyBird/Classes/Serializer.swift; sourceTree = "<group>"; };
+		01CFC66220F41A5E0027F9F2 /* JSONSerializer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = JSONSerializer.swift; path = BittyBird/Classes/JSONSerializer.swift; sourceTree = "<group>"; };
 		01F34D4120EDACDD006FBB47 /* Push.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = Push.swift; path = BittyBird/Classes/Push.swift; sourceTree = "<group>"; };
 		020FB62DDB830EDE26C375760F78979F /* SourceLocation.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = SourceLocation.swift; path = Sources/Nimble/Utils/SourceLocation.swift; sourceTree = "<group>"; };
 		02A8D41A4E050C74298C51A52740E5F0 /* Quick.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Quick.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -352,7 +356,7 @@
 		E3945FF93A4E1A049A621E09FF31890B /* Nimble.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = Nimble.xcconfig; sourceTree = "<group>"; };
 		E4FED6A9862A83DF4EDC30F94928C085 /* BeLessThan.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = BeLessThan.swift; path = Sources/Nimble/Matchers/BeLessThan.swift; sourceTree = "<group>"; };
 		E5C664317AC6633A795F53AF8DD3CC3E /* CurrentTestCaseTracker.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = CurrentTestCaseTracker.h; path = Sources/NimbleObjectiveC/CurrentTestCaseTracker.h; sourceTree = "<group>"; };
-		E846E012D88AFF86A9F834B3321764CB /* Serializer.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = Serializer.swift; path = BittyBird/Classes/Serializer.swift; sourceTree = "<group>"; };
+		E846E012D88AFF86A9F834B3321764CB /* MsgPackSerializer.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = MsgPackSerializer.swift; path = BittyBird/Classes/MsgPackSerializer.swift; sourceTree = "<group>"; };
 		E92E291E1077FCDD7C9A68BCD147FE48 /* Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		E9433BC43BC65A1AC04718A2E939FEA0 /* SwiftMsgPack-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "SwiftMsgPack-dummy.m"; sourceTree = "<group>"; };
 		E99C71886D8C21F2E5857806707CEF9A /* Contain.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = Contain.swift; path = Sources/Nimble/Matchers/Contain.swift; sourceTree = "<group>"; };
@@ -704,10 +708,12 @@
 			children = (
 				498CE4EC9BD804511A46316CA62264F1 /* BBTimer.swift */,
 				AD092BC15F717D00E45DDB3D5D531C8B /* Channel.swift */,
+				01CFC66220F41A5E0027F9F2 /* JSONSerializer.swift */,
 				C15A0260E1977F83E735B8CA6DE0A37A /* Message.swift */,
+				E846E012D88AFF86A9F834B3321764CB /* MsgPackSerializer.swift */,
 				013F8A1C20F080C8006C51F6 /* Presence.swift */,
 				01F34D4120EDACDD006FBB47 /* Push.swift */,
-				E846E012D88AFF86A9F834B3321764CB /* Serializer.swift */,
+				013F8A2020F417E7006C51F6 /* Serializer.swift */,
 				B005DBCA55F81C07E1981F8958C426A7 /* Socket.swift */,
 				945137E6216206CFF602C42FF2F84A5C /* SocketOptions.swift */,
 				A3DA7E7122EEFB3D7E75FBDD3C231F4F /* Pod */,
@@ -1092,13 +1098,15 @@
 			files = (
 				CA47C8A2E2F7FD9AC35844E8D6723A10 /* BBTimer.swift in Sources */,
 				63DE19443836F1633BDFC4BE5651F6DD /* BittyBird-dummy.m in Sources */,
+				01CFC66320F41A5E0027F9F2 /* JSONSerializer.swift in Sources */,
 				461A8FAFAEADE52BF0F03C6DF1EE5C91 /* Channel.swift in Sources */,
 				01F34D4220EDACDD006FBB47 /* Push.swift in Sources */,
 				013F8A1D20F080C8006C51F6 /* Presence.swift in Sources */,
 				3B33D30D76BFBA688B5EF35171A1EE50 /* Message.swift in Sources */,
-				5EED48B2AF94399EBEE6F7D8BF139A13 /* Serializer.swift in Sources */,
+				5EED48B2AF94399EBEE6F7D8BF139A13 /* MsgPackSerializer.swift in Sources */,
 				7F709707A59226AD4DDF128C6525FA71 /* Socket.swift in Sources */,
 				253F05CEC7BE53F18EE48AC2EC899FAC /* SocketOptions.swift in Sources */,
+				013F8A2120F417E7006C51F6 /* Serializer.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
