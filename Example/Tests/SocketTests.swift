@@ -499,8 +499,7 @@ class SocketSpec: QuickSpec {
           mockConnectedSocket.onConnMessage(rawMessage: data)
           expect(logKind) == "receive"
           expect(logMsg) == " room:lobby pushTest r"
-          var ld = logData as! Dictionary<String, Any>
-          expect(ld["a"] as? String) == testMsg.payload["a"] as? String
+          expect(logData as? NSDictionary) == testMsg.payload as NSDictionary
         }
 
         it("sends message to member channels") {

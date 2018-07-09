@@ -17,7 +17,7 @@ pod 'BittyBird'
 
 ## Requirements
 
-BittyBird was written for connecting to Phoenix apps versions >=1.3 using Swift 4.1.2 targeted at devices using iOS 8.0 and above. It's dependencies are [SwiftMsgPack](https://github.com/malcommac/SwiftMsgPack), which it uses for its MessagePack implementaion, and [Starscream](https://github.com/daltoniam/Starscream), a Swift WebSocket library.
+BittyBird was written for connecting to Phoenix apps versions >=1.3 using Swift 4.1.2 targeted at devices using iOS 8.0 and above. It's dependencies are [SwiftMsgPack](https://github.com/malcommac/SwiftMsgPack), which it uses for its MessagePack serialization, and [Starscream](https://github.com/daltoniam/Starscream), a Swift WebSocket library.
 
 ## Usage
 
@@ -55,7 +55,7 @@ BittyBird was written for connecting to Phoenix apps versions >=1.3 using Swift 
       .receive(status: "error") { (errorMsg) in /* handle error */ }
       .receive(status: "timeout") { (_) in /* handle timeout */ }
     
-##### Events
+##### Events Examples
 
     // Handling events
     channel.on(event: "someEvent") { (msg) in
@@ -73,10 +73,11 @@ BittyBird was written for connecting to Phoenix apps versions >=1.3 using Swift 
 
 ## About
 
-The main goal of BittyBird was to be as close to the [Phoenix JS client](https://github.com/phoenixframework/phoenix/blob/master/assets/js/phoenix.js) as possible. I also tried to keep it as customizable as possible. This means almost all functions are open, so you can override them with your own implementations if you want to. Just be careful.
+The main goal of BittyBird was to be as close to the [Phoenix JS client](https://github.com/phoenixframework/phoenix/blob/master/assets/js/phoenix.js) as possible. I also tried to keep it as customizable as possible. This means almost all classes and functions are open, so you can override them with your own implementations if you want to. Just be careful.
 
 #### Notable API Differences from Phoenix JS Client
 
+  * All params are named params
   * `BBTimer` instead of `Timer`
   * `Socket.socketProtocol` instead of `Socket.protocol`
   * `Socket.heartbeatIntervalSeconds` instead of `Socket.heartbeatIntervalMs`
@@ -102,7 +103,6 @@ To setup BittyBird for development on your machine:
 
 ##### TODO
 
-  * Implement Presence
   * Make a JSON serializer
 
 ## License
