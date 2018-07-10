@@ -8,8 +8,9 @@
 
 Pod::Spec.new do |s|
   s.name             = 'BittyBird'
-  s.version          = '0.1.0'
-  s.summary          = 'BittyBird is a Phoenix Channels Swift client that uses MessagePack for serialization instead of JSON.'
+  s.version          = '0.0.1'
+  s.tag              = '0.0.1'
+  s.summary          = 'BittyBird is a Swift client library for interacting with Phoenix Channels. It uses JSON serialization by default, but also comes with a MessagePack serializer for binary message passing.'
 
 # This description is used to generate tags and improve search results.
 #   * Think: What does it do? Why did you write it? What is the focus?
@@ -18,14 +19,14 @@ Pod::Spec.new do |s|
 #   * Finally, don't worry about the indent, CocoaPods strips it!
 
   s.description      = <<-DESC
-BittyBird is a Phoenix Channels Swift client that uses MessagePack for serialization instead of JSON. That way you get that sweet binary goodness. It's also quite open so you can easily extend, inherit from, and override with your own implementations of pushing and receiving messages.
+BittyBird is a Swift client library for interacting with Phoenix Channels. It defaults to using JSON for serialization, but also comes with a MessagePack serializer for encoding and decoding messages to/from binary.
                        DESC
 
   s.homepage         = 'https://github.com/neneboe/BittyBird'
   # s.screenshots     = 'www.example.com/screenshots_1', 'www.example.com/screenshots_2'
   s.license          = { :type => 'MIT', :file => 'LICENSE' }
   s.author           = { 'Nick Eneboe' => 'neneboe@gmail.com' }
-  s.source           = { :git => 'https://github.com/neneboe/BittyBird.git', :tag => s.version.to_s }
+  s.source           = { :git => 'https://github.com/neneboe/BittyBird.git', :tag => s.tag.to_s }
   # s.social_media_url = 'https://twitter.com/<TWITTER_USERNAME>'
 
   s.ios.deployment_target = '8.0'
