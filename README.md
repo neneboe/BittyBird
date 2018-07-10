@@ -12,7 +12,7 @@ BittyBird is available through [CocoaPods](https://cocoapods.org). To install
 it, simply add the following line to your Podfile:
 
 ```ruby
-pod 'BittyBird'
+pod 'BittyBird', '~> 0.0.2'
 ```
 
 ## Requirements
@@ -23,57 +23,63 @@ BittyBird was written for connecting to Phoenix apps versions >=1.3 using Swift 
 
 ##### Examples of Creating a Socket
 
-    // Production
-    let socket = Socket(endPoint: "wss://yoursite.com/socket/websocket")
+```swift
+// Production
+let socket = Socket(endPoint: "wss://yoursite.com/socket/websocket")
 
-    // Development
-    let socket = Socket(endPoint: "ws://localhost:4000/socket/websocket")
-    
-    // Use MessagePack for serialization
-    let socketOptions = SocketOptions(serializer: MsgPackSerializer())
-    let socket = Socket(endPoint: "wss://yoursite.com/socket/websocket", opts: socketOptions)
-    
-    // More Options - All SocketOptions parameters are optional
-    let socketOptions = SocketOptions(
-      timeout: 15, heartbeatIntervalSeconds: 60,
-      reconnectAfterSeconds: { (tries: Int) -> Int in return 100 },
-      logger: { (kind: String, msg: String, data: Any?) in
-        print("kind: \(kind), msg: \(msg), data: \(data)")   
-      },
-      params: ["customParamKey": "customParamValue"],
-      serializer: CustomSerializer() // Any class that conforms to Serializer protocol will work
-    )
-    let socket = Socket(endPoint: "wss://yoursite.com/socket/websocket", opts: socketOptions)
+// Development
+let socket = Socket(endPoint: "ws://localhost:4000/socket/websocket")
+
+// Use MessagePack for serialization
+let socketOptions = SocketOptions(serializer: MsgPackSerializer())
+let socket = Socket(endPoint: "wss://yoursite.com/socket/websocket", opts: socketOptions)
+
+// More Options - All SocketOptions parameters are optional
+let socketOptions = SocketOptions(
+  timeout: 15, heartbeatIntervalSeconds: 60,
+  reconnectAfterSeconds: { (tries: Int) -> Int in return 100 },
+  logger: { (kind: String, msg: String, data: Any?) in
+    print("kind: \(kind), msg: \(msg), data: \(data)")   
+  },
+  params: ["customParamKey": "customParamValue"],
+  serializer: CustomSerializer() // Any class that conforms to Serializer protocol will work
+)
+let socket = Socket(endPoint: "wss://yoursite.com/socket/websocket", opts: socketOptions)
+```
 
 ##### Examples of Creating and Joining Channels
+  
+```swift
+// Creating a channel without parameters
+let channel = socket.channel(topic: "room:lobby")
 
-    // Creating a channel without parameters
-    let channel = socket.channel(topic: "room:lobby")
-    
-    // Creating a channel with parameters, passed to Phoenix channel's join function
-    let channel = socket.channel(topic: "room:lobby", chanParams: ["customParam": "customValue"])
-    
-    // Joining a channel
-    channel.join()
-      .receive(status: "ok") { (msg) in /* handle successful join */ }
-      .receive(status: "error") { (errorMsg) in /* handle error */ }
-      .receive(status: "timeout") { (_) in /* handle timeout */ }
-    
+// Creating a channel with parameters, passed to Phoenix channel's join function
+let channel = socket.channel(topic: "room:lobby", chanParams: ["customParam": "customValue"])
+
+// Joining a channel
+channel.join()
+  .receive(status: "ok") { (msg) in /* handle successful join */ }
+  .receive(status: "error") { (errorMsg) in /* handle error */ }
+  .receive(status: "timeout") { (_) in /* handle timeout */ }
+```
+
 ##### Examples of Pushing and Handling Events
 
-    // Handling events
-    channel.on(event: "someEvent") { (msg) in
-      /* Handle "someEvent" message, probably doing something with msg.payload */ 
-    }
-    
-    // Pushing messages
-    channel.push(event: "somePushEvent", payload: ["aKey": "aValue", "anotherKey": "anotherValue"])
-    
-    // Pushing messages and optionally receiving replys
-    channel.push(event: "somePushEvent", payload: ["aKey": "aValue"])
-      .receive(status: "ok") { (msg) in /* handle push reply */ }
-      .receive(status: "error") { (errorMsg) in /* handle push error */ }
-      .receive(status: "timeout") { (_) in /* handle push timeout */ }
+```swift
+// Handling events
+channel.on(event: "someEvent") { (msg) in
+  /* Handle "someEvent" message, probably doing something with msg.payload */ 
+}
+
+// Pushing messages
+channel.push(event: "somePushEvent", payload: ["aKey": "aValue", "anotherKey": "anotherValue"])
+
+// Pushing messages and optionally receiving replys
+channel.push(event: "somePushEvent", payload: ["aKey": "aValue"])
+  .receive(status: "ok") { (msg) in /* handle push reply */ }
+  .receive(status: "error") { (errorMsg) in /* handle push error */ }
+  .receive(status: "timeout") { (_) in /* handle push timeout */ }
+```
 
 ## About
 

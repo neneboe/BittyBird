@@ -8,8 +8,7 @@
 
 Pod::Spec.new do |s|
   s.name             = 'BittyBird'
-  s.version          = '0.0.1'
-  s.tag              = '0.0.1'
+  s.version          = '0.0.2'
   s.summary          = 'BittyBird is a Swift client library for interacting with Phoenix Channels. It uses JSON serialization by default, but also comes with a MessagePack serializer for binary message passing.'
 
 # This description is used to generate tags and improve search results.
@@ -26,7 +25,7 @@ BittyBird is a Swift client library for interacting with Phoenix Channels. It de
   # s.screenshots     = 'www.example.com/screenshots_1', 'www.example.com/screenshots_2'
   s.license          = { :type => 'MIT', :file => 'LICENSE' }
   s.author           = { 'Nick Eneboe' => 'neneboe@gmail.com' }
-  s.source           = { :git => 'https://github.com/neneboe/BittyBird.git', :tag => s.tag.to_s }
+  s.source           = { :git => 'https://github.com/neneboe/BittyBird.git', :tag => s.version.to_s }
   # s.social_media_url = 'https://twitter.com/<TWITTER_USERNAME>'
 
   s.ios.deployment_target = '8.0'
