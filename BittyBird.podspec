@@ -8,8 +8,8 @@
 
 Pod::Spec.new do |s|
   s.name             = 'BittyBird'
-  s.version          = '0.0.2'
-  s.summary          = 'BittyBird is a Swift client library for interacting with Phoenix Channels. It uses JSON serialization by default, but also comes with a MessagePack serializer for binary message passing.'
+  s.version          = '0.0.3'
+  s.summary          = 'Swift client library for Phoenix Channels'
 
 # This description is used to generate tags and improve search results.
 #   * Think: What does it do? Why did you write it? What is the focus?
@@ -18,7 +18,7 @@ Pod::Spec.new do |s|
 #   * Finally, don't worry about the indent, CocoaPods strips it!
 
   s.description      = <<-DESC
-BittyBird is a Swift client library for interacting with Phoenix Channels. It defaults to using JSON for serialization, but also comes with a MessagePack serializer for encoding and decoding messages to/from binary.
+  BittyBird is a Swift client library for interacting with Phoenix Channels. It defaults to using JSON for serialization, but also comes with a MessagePack serializer for encoding and decoding messages to/from binary.
                        DESC
 
   s.homepage         = 'https://github.com/neneboe/BittyBird'
