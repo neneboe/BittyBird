@@ -64,7 +64,7 @@ class SerializerSpec: QuickSpec {
           expect(decodedMsg.event) == testMsg1.event
           expect(decodedMsg.payload[key] as? String) == stringValue
           expect(decodedMsg.ref) == testMsg1.ref
-          expect(decodedMsg.joinRef) == ""
+          expect(decodedMsg.joinRef).to(beNil())
         }
       }
     }

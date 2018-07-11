@@ -65,7 +65,7 @@ open class MsgPackSerializer: Serializer {
       event: castData["event"] as? String ?? "",
       payload: castData["payload"] as? Dictionary<String, Any> ?? [:],
       ref: castData["ref"] as? String ?? "",
-      joinRef: castData["joinRef"] as? String ?? ""
+      joinRef: castData["joinRef"] as? String
     )
   }
 }
