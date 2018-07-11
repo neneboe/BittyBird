@@ -57,11 +57,11 @@ open class JSONSerializer: Serializer {
   private func buildMessageFromData(decodedData: Any?) -> Message {
     let castData = decodedData as! Dictionary<String, Any>
     return Message(
-      topic: castData["topic"] as! String,
-      event: castData["event"] as! String,
-      payload: castData["payload"] as! Dictionary<String, Any>,
-      ref: castData["ref"] as! String,
-      joinRef: castData["joinRef"] as? String
+      topic: castData["topic"] as? String ?? "",
+      event: castData["event"] as? String ?? "",
+      payload: castData["payload"] as? Dictionary<String, Any> ?? [:],
+      ref: castData["ref"] as? String ?? "",
+      joinRef: castData["joinRef"] as? String ?? ""
     )
   }
 }

@@ -12,7 +12,7 @@ BittyBird is available through [CocoaPods](https://cocoapods.org). To install
 it, simply add the following line to your Podfile:
 
 ```ruby
-pod 'BittyBird', '~> 0.0.3'
+pod 'BittyBird', '~> 0.0.4'
 ```
 
 ## Requirements
