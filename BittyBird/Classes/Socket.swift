@@ -44,10 +44,14 @@ open class Socket {
 
   // TODO: Configurable, optional websocket transport - uses Starscream WebSocket by default
   //  private let transport: Any
-  /// The Starscream web socket connection
-  open let connection: WebSocket
+  /// The web socket connection
+  open let connection: BBWebSocket
   /// The function used for encoding
   open let serializer: Serializer
+  /// The channel class of socket's channels
+  open let channelClass: Channel.Type
+  /// The push class of the socket's pushes
+  open let pushClass: Push.Type
 
   /// List of instances of Channel that are connected via the socket
   public var channels: Array<Channel> = []
@@ -75,7 +79,7 @@ open class Socket {
    - Parameter opts: A SocketOptions instance that can be used to configure some socket properties
    - Returns: An instance of Socket
    */
-  public init(connection: WebSocket, opts: SocketOptions = SocketOptions()) {
+  public init(connection: BBWebSocket, opts: SocketOptions = SocketOptions()) {
     self.connection = connection
     self.endPointURL = connection.currentURL
     self.heartbeatIntervalSeconds = opts.heartbeatIntervalSeconds ?? Socket.HEARTBEATINTERVAL
@@ -84,6 +88,8 @@ open class Socket {
     self.reconnectAfterSeconds = opts.reconnectAfterSeconds ?? Socket.RECONNECTAFTERFUNC
     self.timeout = opts.timeout ?? Socket.TIMEOUT
     self.serializer = opts.serializer ?? JSONSerializer()
+    self.channelClass = opts.channelClass ?? Channel.self
+    self.pushClass = opts.pushClass ?? Push.self
     self.reconnectTimer = BBTimer(callback: {
       self.disconnect({ self.connect() })
     }, timerCalc: reconnectAfterSeconds)
@@ -98,8 +104,10 @@ open class Socket {
    */
   public convenience init(endPoint: String, opts: SocketOptions = SocketOptions()) {
     let urlWithParams = Socket.buildURLWithParams(endPoint: endPoint, params: opts.params)
-    let connection = WebSocket(url: urlWithParams)
-    self.init(connection: connection, opts: opts)
+    var modedOpts = opts
+    modedOpts.webSocketClass = opts.webSocketClass ?? BBStarscreamSocket.self as BBWebSocket.Type
+    let connection = modedOpts.webSocketClass!.init(url: urlWithParams)
+    self.init(connection: connection, opts: modedOpts)
   }
 
   /// The protocol of the socket: either "wss" or "ws"
@@ -216,7 +224,7 @@ open class Socket {
    - Returns: A new Channel instance
    */
   open func channel(topic: String, chanParams: Dictionary<String, Any>? = nil) -> Channel {
-    let chan = Channel(topic: topic, params: chanParams, socket: self)
+    let chan = channelClass.init(topic: topic, params: chanParams, socket: self, pushClass: pushClass)
     channels.append(chan)
     return chan
   }

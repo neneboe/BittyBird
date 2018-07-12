@@ -62,7 +62,7 @@ open class Channel {
    - Parameter pushClass: Optional type of Push to use for creating new pushes
    - Returns: A new instance of channel
    */
-  init(
+  required public init(
     topic: String,
     params: Dictionary<String, Any>? = [:],
     socket: Socket,
