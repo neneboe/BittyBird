@@ -98,7 +98,11 @@ class SocketSpec: QuickSpec {
             heartbeatIntervalSeconds: 998,
             reconnectAfterSeconds: {(_ sec) -> Int in return 997},
             logger: { (_ kind, _ msg, _ data) in loggerHasRun = true },
-            params: ["param1": "value1", "param2": "value2"]
+            params: ["param1": "value1", "param2": "value2"],
+            serializer: MsgPackSerializer(),
+            webSocketClass: MockConnection.self,
+            channelClass: MockChannel.self,
+            pushClass: MockPush.self
           )
           let configuredSocket = Socket(endPoint: wsEndPoint, opts: socketOptions)
           configuredSocket.log(kind: "kind", msg: "msg", data: "data")
@@ -108,6 +112,10 @@ class SocketSpec: QuickSpec {
           expect(configuredSocket.params["param1"] as? String) == "value1"
           expect(configuredSocket.params["param2"] as? String) == "value2"
           expect(loggerHasRun).to(beTrue())
+          expect(configuredSocket.serializer).to(beAKindOf(MsgPackSerializer.self))
+          expect(configuredSocket.connection).to(beAKindOf(MockConnection.self))
+          expect(configuredSocket.channelClass).to(beAKindOf(MockChannel.Type.self))
+          expect(configuredSocket.pushClass).to(beAKindOf(MockPush.Type.self))
         }
 
         describe("`endPointURL`") {

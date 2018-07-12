@@ -14,6 +14,9 @@ public struct SocketOptions {
   public let logger: ((_ kind: String, _ msg: String, _ data: Any) -> Void)?
   public let params: Dictionary<String, Any>?
   public let serializer: Serializer?
+  public var webSocketClass: BBWebSocket.Type?
+  public let channelClass: Channel.Type?
+  public let pushClass: Push.Type?
 
   public init(
     timeout: Int? = nil,
@@ -21,7 +24,10 @@ public struct SocketOptions {
     reconnectAfterSeconds: ((_ tries: Int) -> Int)? = nil,
     logger: ((_ kind: String, _ msg: String, _ data: Any) -> Void)? = nil,
     params: Dictionary<String, Any>? = nil,
-    serializer: Serializer? = nil
+    serializer: Serializer? = nil,
+    webSocketClass: BBWebSocket.Type? = nil,
+    channelClass: Channel.Type? = nil,
+    pushClass: Push.Type? = nil
   ) {
     self.timeout = timeout
     self.heartbeatIntervalSeconds = heartbeatIntervalSeconds
@@ -29,5 +35,8 @@ public struct SocketOptions {
     self.logger = logger
     self.params = params
     self.serializer = serializer
+    self.webSocketClass = webSocketClass
+    self.channelClass = channelClass
+    self.pushClass = pushClass
   }
 }

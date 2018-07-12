@@ -8,7 +8,7 @@
 import Starscream
 @testable import BittyBird
 
-class MockConnection: WebSocket {
+class MockConnection: BBStarscreamSocket {
   var disconnectCalled = false
   override func disconnect(forceTimeout: TimeInterval? = nil, closeCode: UInt16 = 1000) {
     disconnectCalled = true

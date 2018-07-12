@@ -9,6 +9,8 @@
 /* Begin PBXBuildFile section */
 		013F8A1D20F080C8006C51F6 /* Presence.swift in Sources */ = {isa = PBXBuildFile; fileRef = 013F8A1C20F080C8006C51F6 /* Presence.swift */; };
 		013F8A2120F417E7006C51F6 /* Serializer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 013F8A2020F417E7006C51F6 /* Serializer.swift */; };
+		0183977320F7FB1100D8399A /* BBWebSocket.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0183977220F7FB1100D8399A /* BBWebSocket.swift */; };
+		0183977520F8004700D8399A /* BBStarscreamSocket.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0183977420F8004700D8399A /* BBStarscreamSocket.swift */; };
 		01CFC66320F41A5E0027F9F2 /* JSONSerializer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01CFC66220F41A5E0027F9F2 /* JSONSerializer.swift */; };
 		01F34D4220EDACDD006FBB47 /* Push.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01F34D4120EDACDD006FBB47 /* Push.swift */; };
 		0777D3B7CE66BEDB6169679B1111A65C /* Quick-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = EA236ADF6F943450EE9C48FADE777499 /* Quick-dummy.m */; };
@@ -202,6 +204,8 @@
 /* Begin PBXFileReference section */
 		013F8A1C20F080C8006C51F6 /* Presence.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = Presence.swift; path = BittyBird/Classes/Presence.swift; sourceTree = "<group>"; };
 		013F8A2020F417E7006C51F6 /* Serializer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = Serializer.swift; path = BittyBird/Classes/Serializer.swift; sourceTree = "<group>"; };
+		0183977220F7FB1100D8399A /* BBWebSocket.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = BBWebSocket.swift; path = BittyBird/Classes/BBWebSocket.swift; sourceTree = "<group>"; };
+		0183977420F8004700D8399A /* BBStarscreamSocket.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BBStarscreamSocket.swift; sourceTree = "<group>"; };
 		01CFC66220F41A5E0027F9F2 /* JSONSerializer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = JSONSerializer.swift; path = BittyBird/Classes/JSONSerializer.swift; sourceTree = "<group>"; };
 		01F34D4120EDACDD006FBB47 /* Push.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = Push.swift; path = BittyBird/Classes/Push.swift; sourceTree = "<group>"; };
 		020FB62DDB830EDE26C375760F78979F /* SourceLocation.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = SourceLocation.swift; path = Sources/Nimble/Utils/SourceLocation.swift; sourceTree = "<group>"; };
@@ -718,6 +722,8 @@
 				945137E6216206CFF602C42FF2F84A5C /* SocketOptions.swift */,
 				A3DA7E7122EEFB3D7E75FBDD3C231F4F /* Pod */,
 				3C090AC23AA0092DE273781F6C3776EC /* Support Files */,
+				0183977220F7FB1100D8399A /* BBWebSocket.swift */,
+				0183977420F8004700D8399A /* BBStarscreamSocket.swift */,
 			);
 			name = BittyBird;
 			path = ../..;
@@ -1099,10 +1105,12 @@
 				CA47C8A2E2F7FD9AC35844E8D6723A10 /* BBTimer.swift in Sources */,
 				63DE19443836F1633BDFC4BE5651F6DD /* BittyBird-dummy.m in Sources */,
 				01CFC66320F41A5E0027F9F2 /* JSONSerializer.swift in Sources */,
+				0183977320F7FB1100D8399A /* BBWebSocket.swift in Sources */,
 				461A8FAFAEADE52BF0F03C6DF1EE5C91 /* Channel.swift in Sources */,
 				01F34D4220EDACDD006FBB47 /* Push.swift in Sources */,
 				013F8A1D20F080C8006C51F6 /* Presence.swift in Sources */,
 				3B33D30D76BFBA688B5EF35171A1EE50 /* Message.swift in Sources */,
+				0183977520F8004700D8399A /* BBStarscreamSocket.swift in Sources */,
 				5EED48B2AF94399EBEE6F7D8BF139A13 /* MsgPackSerializer.swift in Sources */,
 				7F709707A59226AD4DDF128C6525FA71 /* Socket.swift in Sources */,
 				253F05CEC7BE53F18EE48AC2EC899FAC /* SocketOptions.swift in Sources */,
