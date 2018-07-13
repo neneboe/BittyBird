@@ -710,6 +710,7 @@
 		C2067025BCCDA82141F27BD21428FD74 /* BittyBird */ = {
 			isa = PBXGroup;
 			children = (
+				0183977620F8130800D8399A /* BBStarscreamSocket.swift */,
 				498CE4EC9BD804511A46316CA62264F1 /* BBTimer.swift */,
 				0183977220F7FB1100D8399A /* BBWebSocket.swift */,
 				AD092BC15F717D00E45DDB3D5D531C8B /* Channel.swift */,
@@ -723,7 +724,6 @@
 				945137E6216206CFF602C42FF2F84A5C /* SocketOptions.swift */,
 				A3DA7E7122EEFB3D7E75FBDD3C231F4F /* Pod */,
 				3C090AC23AA0092DE273781F6C3776EC /* Support Files */,
-				0183977620F8130800D8399A /* BBStarscreamSocket.swift */,
 			);
 			name = BittyBird;
 			path = ../..;
