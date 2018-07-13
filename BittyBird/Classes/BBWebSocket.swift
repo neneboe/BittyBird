@@ -9,7 +9,5 @@ import Starscream
 
 public protocol BBWebSocket: WebSocketClient {
   var currentURL: URL { get }
-  var delegate: WebSocketDelegate? { get }
-
   init(url: URL)
 }
