@@ -300,7 +300,7 @@ open class Socket {
   }
 
   /// Callback for onConnMessage methods
-  private func handleNewMessage(msg: Message) {
+  open func handleNewMessage(msg: Message) {
     log(
       kind: "receive",
       msg: "\(msg.payload["status"] ?? "") \(msg.topic) \(msg.event) \(msg.ref)",
