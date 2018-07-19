@@ -303,6 +303,7 @@ class ChannelSpec: QuickSpec {
         context("when channel `canPush`") {
           it("creates an instance of Push and sends it") {
             mockChannel.state = ChannelState.joined
+            mockChannel.joinedOnce = true
             precondition(mockChannel.canPush == true)
             let testPush = mockChannel.push(event: "testPush", payload: ["k": "v"]) as! MockPush
             expect(testPush.sendCalled).to(beTrue())
@@ -314,10 +315,12 @@ class ChannelSpec: QuickSpec {
             precondition(mockChannel.canPush == false)
           }
           it("calls scheduleTimeout on the new Push instance") {
+            mockChannel.joinedOnce = true
             let testPush = mockChannel.push(event: "testPush", payload: ["k": "v"]) as! MockPush
             expect(testPush.startTimeoutCalled).to(beTrue())
           }
           it("adds new Push instance to the `pushBuffer`") {
+            mockChannel.joinedOnce = true
             let testPush = mockChannel.push(event: "testPush", payload: ["k": "v"])
             expect(mockConnectedSocket.pushCalled).to(beFalse())
             expect(mockChannel.pushBuffer.first) === testPush

@@ -145,7 +145,7 @@ open class Channel {
    - Parameter timeout: Optional duration to wait for a response to the push
    */
   open func push(event: String, payload: Dictionary<String, Any>, timeout: Int? = nil) -> Push {
-    guard !joinedOnce else {
+    guard joinedOnce else {
       fatalError("tried to push \(event) to \(topic) before joining. Use channel.join() before pushing events.")
     }
     let pushEvent = pushClass.init(channel: self, event: event, payload: payload, timeout: timeout ?? self.timeout)
